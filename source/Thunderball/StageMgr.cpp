@@ -103,12 +103,15 @@ void StageMgr::Clear()
 }
 
 // TEMPLATE: POPCAPGAME1 0x004422a0
-// std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,bool,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,bool> >,0> >::find
+// std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,Sexy::SmartPtr<Sexy::LevelInfo>,Sexy::StringLessNoCase,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,Sexy::SmartPtr<Sexy::LevelInfo> > >,1> >::find
+
+// TEMPLATE: POPCAPGAME1 0x0043f310
+// std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,Sexy::SmartPtr<Sexy::LevelInfo>,Sexy::StringLessNoCase,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,Sexy::SmartPtr<Sexy::LevelInfo> > >,1> >::_Lbound
 
 // FUNCTION: POPCAPGAME1 0x00442ff0
 LevelInfo* StageMgr::GetLevelInfoByName(const std::string& theName)
 {
-	std::multimap<std::string, SmartPtr<LevelInfo>>::iterator it = mUnk0x1c.find(theName);
+	std::multimap<std::string, SmartPtr<LevelInfo>, StringLessNoCase>::iterator it = mUnk0x1c.find(theName);
 	if (it == mUnk0x1c.end()) {
 		return NULL;
 	}
@@ -161,7 +164,7 @@ LevelInfo* StageMgr::GetRandomLevel(PlayerInfo* param_1, bool param_2, int param
 // FUNCTION: POPCAPGAME1 0x0043d820
 StageInfo* StageMgr::GetStageInfo(int param_1)
 {
-	if (-1 <= param_1 && param_1 < (int) mUnk0xc.size()) {
+	if (0 <= param_1 && param_1 < (int) mUnk0xc.size()) {
 		return mUnk0xc[param_1].get();
 	}
 	else {
@@ -205,35 +208,40 @@ void StageMgr::ReadConfig(std::string& pathString)
 	Clear();
 
 	ConfigParser parser(true);
-	parser.Open(pathString, true);
+	try {
+		parser.Open(pathString, true);
 
-	bool inStageGroup = false;
+		bool inStageGroup = false;
 
-	while (parser.ReadNext()) {
-		if (parser.mUnk0x9c == 1) {
-			if (parser.GroupTypeIs("Stage", true)) {
-				inStageGroup = true;
+		while (parser.ReadNext()) {
+			if (parser.mUnk0x9c == 1) {
+				if (parser.GroupTypeIs("Stage", true)) {
+					inStageGroup = true;
 
-				SmartPtr<StageInfo> stageInfo = new StageInfo();
+					SmartPtr<StageInfo> stageInfo = new StageInfo();
 
-				mUnk0xc.push_back(stageInfo);
+					mUnk0xc.push_back(stageInfo);
+				}
+				else {
+					parser.ErrorUnexpectedGroupType();
+				}
+			}
+			else if (parser.mUnk0x9c != 2) {
+				inStageGroup = false;
+			}
+			else if (inStageGroup) {
+				ReadStageConfig(&parser, mUnk0xc.back());
 			}
 			else {
-				parser.ErrorUnexpectedGroupType();
-			}
-		}
-		else if (parser.mUnk0x9c == 2) {
-			inStageGroup = false;
-		}
-		else {
-			if (!inStageGroup) {
 				ReadKeyVal(&parser);
 			}
-			else {
-				StageInfo* currentStage = mUnk0xc.back();
-				ReadStageConfig(&parser, currentStage);
-			}
 		}
+	}
+	catch (ConfigParserException& e) {
+		if (GetThunderballApp() != NULL) {
+			GetThunderballApp()->Popup("Stage error: " + parser.GetError());
+		}
+		Clear();
 	}
 }
 
@@ -244,10 +252,10 @@ void StageMgr::ReadKeyVal(ConfigParser* theConfigParser)
 	if (stricmp(theConfigParser->mUnk0x64.c_str(), "ExcludeRandStages") == 0) {
 		if (aStringParser->mUnk0x4 < aStringParser->mUnk0x8) {
 			do {
-				int anInt = aStringParser->ReadInt();
+				int anInt = aStringParser->ReadInt() - 1;
 				StageInfo* aStageInfo = GetStageInfo(anInt);
 				if (aStageInfo == NULL) {
-					theConfigParser->Error(StrFormat("Stage not found: %d", anInt - 1), false, true);
+					theConfigParser->Error(StrFormat("Stage not found: %d", anInt), false, true);
 				}
 
 				for (int i = 0; i < aStageInfo->mUnk0x5c.size(); i++) {
@@ -256,39 +264,23 @@ void StageMgr::ReadKeyVal(ConfigParser* theConfigParser)
 			} while (aStringParser->CheckNextChar(',') && aStringParser->mUnk0x4 < aStringParser->mUnk0x8);
 		}
 	}
-	else {
-		if (stricmp(theConfigParser->mUnk0x64.c_str(), "IncludeRandStages") == 0) {
-			if (aStringParser->mUnk0x4 < aStringParser->mUnk0x8) {
-				do {
-					int anInt = aStringParser->ReadInt();
-					StageInfo* aStageInfo = GetStageInfo(anInt);
-					if (aStageInfo == NULL) {
-						theConfigParser->Error(StrFormat("Stage not found: %d", anInt - 1), false, true);
-					}
-
-					for (int i = 0; i < aStageInfo->mUnk0x5c.size(); i++) {
-						aStageInfo->mUnk0x5c[i]->mUnk0x84 = false;
-					}
-				} while (aStringParser->CheckNextChar(',') && aStringParser->mUnk0x4 < aStringParser->mUnk0x8);
-			}
-		}
-		else {
-			if (stricmp(theConfigParser->mUnk0x64.c_str(), "ExcludeRandLevels") != 0) {
-				if (stricmp(theConfigParser->mUnk0x64.c_str(), "IncludeRandLevels") != 0) {
-					if (stricmp(theConfigParser->mUnk0x64.c_str(), "Tip") == 0) {
-						std::string aTip;
-						if (aStringParser->ReadString(aTip, true, true)) {
-							mUnk0x2c.push_back(aTip);
-						}
-					}
+	else if (stricmp(theConfigParser->mUnk0x64.c_str(), "IncludeRandStages") == 0) {
+		if (aStringParser->mUnk0x4 < aStringParser->mUnk0x8) {
+			do {
+				int anInt = aStringParser->ReadInt() - 1;
+				StageInfo* aStageInfo = GetStageInfo(anInt);
+				if (aStageInfo == NULL) {
+					theConfigParser->Error(StrFormat("Stage not found: %d", anInt), false, true);
 				}
-				else {
-					theConfigParser->ErrorUnexpectedKey();
-				}
-				return;
-			}
-		}
 
+				for (int i = 0; i < aStageInfo->mUnk0x5c.size(); i++) {
+					aStageInfo->mUnk0x5c[i]->mUnk0x84 = false;
+				}
+			} while (aStringParser->CheckNextChar(',') && aStringParser->mUnk0x4 < aStringParser->mUnk0x8);
+		}
+	}
+
+	else if (stricmp(theConfigParser->mUnk0x64.c_str(), "ExcludeRandLevels") == 0 || stricmp(theConfigParser->mUnk0x64.c_str(), "IncludeRandLevels") == 0) {
 		bool local_31 = stricmp(theConfigParser->mUnk0x64.c_str(), "ExcludeRandLevels") == 0;
 		while (aStringParser->mUnk0x4 < aStringParser->mUnk0x8) {
 			std::string aLevelName = aStringParser->ReadString(true, true);
@@ -304,6 +296,16 @@ void StageMgr::ReadKeyVal(ConfigParser* theConfigParser)
 				break;
 			}
 		}
+	}
+
+	else if (stricmp(theConfigParser->mUnk0x64.c_str(), "Tip") == 0) {
+		std::string aTip;
+		if (aStringParser->ReadString(aTip, true, true)) {
+			mUnk0x2c.push_back(aTip);
+		}
+	}
+	else {
+		theConfigParser->ErrorUnexpectedKey();
 	}
 }
 

@@ -89,8 +89,8 @@ AdventureScreen::AdventureScreen(ThunderballApp* theApp)
 		}
 	}
 
-	LoadImageById(mApp->mResourceManager, 0x184);
-	LoadImageById(mApp->mResourceManager, 0x185);
+	LoadImageById(mApp->mResourceManager, IMAGE_ADV_ADVENTURE_ID);
+	LoadImageById(mApp->mResourceManager, IMAGE_ADV_RESTART_COVER_ID);
 
 	g.DrawImage(IMAGE_ADV_ADVENTURE, 0, 0);
 	mUnk0x9c = false;

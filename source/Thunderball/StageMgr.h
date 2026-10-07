@@ -49,7 +49,7 @@ public:
 	ThunderballApp* mApp; // +0x4
 	int mUnk0x8;
 	std::vector<SmartPtr<StageInfo>> mUnk0xc;
-	std::multimap<std::string, SmartPtr<LevelInfo>> mUnk0x1c;
+	std::multimap<std::string, SmartPtr<LevelInfo>, StringLessNoCase> mUnk0x1c;
 	std::vector<std::string> mUnk0x2c;
 
 	StageMgr(ThunderballApp* theApp);

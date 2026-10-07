@@ -274,6 +274,31 @@ void DataSync_SyncSTLMapImpl(DataSync& theSync, T& theMap, KeySync theKeySync, V
 	}
 }
 
+template <class T, class ValSync, class AllocStackFunc>
+void DataSync_SyncSTLSetImpl(DataSync &theSync, T &theSet, ValSync theValSync, AllocStackFunc theAllocStack)
+{
+	DataReader* aReader = theSync.mReader;
+	DataWriter* aWriter = theSync.mWriter;
+	if (aReader)
+	{
+		theSet.clear();
+
+		int aNumItems = aReader->ReadLong();
+		for (int i=0; i<aNumItems; i++)
+		{
+			typename T::value_type aVal;
+			theSet.insert(theSet.end(), theAllocStack.Alloc());
+			theValSync.Sync(theSync, *theSet.end());
+		}
+	}
+	else
+	{
+		aWriter->WriteLong((int)theSet.size());
+		for (typename T::iterator anItr = theSet.begin(); anItr != theSet.end(); ++anItr)
+			theValSync.Sync(theSync,(typename T::value_type&)*anItr);
+	}
+}
+
 template <class T, class ValSync>
 void DataSync_SyncSTLListImplSimple(DataSync& theSync, T& theList, ValSync theValSync)
 {
@@ -293,6 +318,15 @@ void DataSync_SyncSTLMapImplSimple(DataSync& theSync, T& theMap, KeySync theKeyS
 	*(char*)&aValAlloc = 0;
 	
 	DataSync_SyncSTLMapImpl(theSync, theMap, theKeySync, theValSync, aKeyAlloc, aValAlloc);
+}
+
+template <class T, class ValSync>
+void DataSync_SyncSTLSetImplSimple(DataSync& theSync, T& theSet, ValSync theValSync)
+{
+	DataSyncFunc_AllocStack<typename T::value_type> aValAlloc;
+	*(char*)&aValAlloc = 0;
+	
+	DataSync_SyncSTLSetImpl(theSync, theSet, theValSync, aValAlloc);
 }
 
 template <typename T>

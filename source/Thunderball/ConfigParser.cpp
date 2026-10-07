@@ -113,42 +113,42 @@ void ConfigParser::GetToken(std::string& theToken, bool allowSpaces)
 		}
 
 		else {
-			if (!isspace(c)) {
-				if (c == ';') {
-					if (allowSpaces) {
+			if (isspace(c)) {
+				if (allowSpaces) {
+					if (c == '\n') {
 						break;
 					}
 					theToken += c;
 				}
-				else if (c == '{' || c == '}') {
-					if (theToken.empty()) {
-						theToken = c;
-						return;
-					}
-					mUnk0x14->UngetChar();
+				else if (!theToken.empty()) {
 					return;
 				}
-				else if (c == '[') {
-					GetCode(theToken);
-				}
-				else if (c == '\\' && mUnk0x14->PeekChar() == '\n') {
-					mUnk0x14->NextChar();
-				}
-				else {
-					theToken += c;
-					if (c == ':' && !allowSpaces) {
-						break;
-					}
-				}
 			}
-			else if (allowSpaces) {
-				if (c == '\n') {
+			else if (c == ';') {
+				if (allowSpaces) {
 					break;
 				}
 				theToken += c;
 			}
-			else if (!theToken.empty()) {
+			else if (c == '{' || c == '}') {
+				if (theToken.empty()) {
+					theToken = c;
+					return;
+				}
+				mUnk0x14->UngetChar();
 				return;
+			}
+			else if (c == '[') {
+				GetCode(theToken);
+			}
+			else if (c == '\\' && mUnk0x14->PeekChar() == '\n') {
+				mUnk0x14->NextChar();
+			}
+			else {
+				theToken += c;
+				if (c == ':' && !allowSpaces) {
+					break;
+				}
 			}
 		}
 	}
@@ -226,7 +226,7 @@ bool ConfigParser::DoReadNext()
 			return false;
 		}
 		else {
-			return DoReadNext();
+			return true;
 		}
 		
 	}
@@ -267,6 +267,7 @@ bool ConfigParser::Open(const std::string& param_1, bool param_2)
 		return Error("Unable to open file: " + param_1, false, true);
 	}
 
+	return true;
 }
 
 // STUB: POPCAPGAME1 0x004c0740
@@ -337,13 +338,13 @@ bool ConfigParser::GroupTypeIs(const char* str, int val)
 	}
 
 	std::string& aGroupName = mUnk0x58.empty() ? mUnk0x38 : mUnk0x58.back().mUnk0x0;
-	return stricmp(aGroupName.c_str(), str) == 0;
+	return _stricmp(aGroupName.c_str(), str) == 0;
 }
 
 // FUNCTION: POPCAPGAME1 0x004bf270
 std::string ConfigParser::GetError()
 {
-	if (mUnk0x18.empty() && mStringParser.mUnk0xc.empty()) {
+	if (mUnk0x18.empty() && !mStringParser.mUnk0xc.empty()) {
 		ErrorNoException(mStringParser.mUnk0xc, false);
 	}
 	return mUnk0x18;

@@ -170,7 +170,7 @@ void StoryScreen::Draw(Graphics* g)
     g->DrawImageBox(aDialogRect, IMAGE_DLG_DIALOGBOX);
     g->DrawImage(IMAGE_DLG_PLAYWIDGET1, mX - ModVal(0, "SEXY_SEXYMODVAL.\\StoryScreen.cpp203,1079", 32), mY - ModVal(0, "SEXY_SEXYMODVAL.\\StoryScreen.cpp204,1079", 20));
 
-    if (mUnk0x98 == 0) {
+    if (mUnk0x98 == NULL) {
         return;
     }
 
