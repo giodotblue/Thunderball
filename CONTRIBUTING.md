@@ -1,3 +1,9 @@
+# AI notice
+This project does not condone the usage of AI for the following reasons:
+- It was made with the intention to learn reverse engineer
+- The codebase is planned to be used after decompilation, and when done by AI it is difficult to understand it without directly interfacing with it
+- The general sentiment of the peggle community opposes the use of generative AI in projects
+
 # Contributing
 ## Before You Start
 Decompilation is quite a hard skill for beginners, so we suggest exploring and learning how to use ghidra and understand C++/assembly. 
