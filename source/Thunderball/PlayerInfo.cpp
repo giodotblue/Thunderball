@@ -15,9 +15,61 @@ PlayerInfo::PlayerInfo()
 	Reset(false);
 }
 
-// STUB: POPCAPGAME1 0x00462490
+// FUNCTION: POPCAPGAME1 0x00462490
 PlayerInfo::PlayerInfo(const PlayerInfo& param_1)
 {
+	mName.assign(param_1.mName, 0, (size_t) -1);
+	mUseSeq = param_1.mUseSeq;
+	mId = param_1.mId;
+	mUnk0x28 = param_1.mUnk0x28;
+	mUnk0x2c = param_1.mUnk0x2c;
+	mUnk0x30 = param_1.mUnk0x30;
+	mUnk0x34 = param_1.mUnk0x34;
+	mUnk0x38 = param_1.mUnk0x38;
+	mUnk0x3c = param_1.mUnk0x3c;
+	mUnk0x40 = param_1.mUnk0x40;
+	mUnk0x44 = param_1.mUnk0x44;
+	mUnk0x48 = param_1.mUnk0x48;
+	mUnk0x4c = param_1.mUnk0x4c;
+	mUnk0x50 = param_1.mUnk0x50;
+	mUnk0x54 = param_1.mUnk0x54;
+	mUnk0x58 = param_1.mUnk0x58;
+	mUnk0x5c = param_1.mUnk0x5c;
+	mUnk0x60 = param_1.mUnk0x60;
+	mUnk0x61 = param_1.mUnk0x61;
+	mUnk0x64 = param_1.mUnk0x64;
+	mUnk0x68 = param_1.mUnk0x68;
+	mUnk0x6c = param_1.mUnk0x6c;
+	mUnk0x70[0] = param_1.mUnk0x70[0];
+	mUnk0x70[1] = param_1.mUnk0x70[1];
+	mUnk0x70[2] = param_1.mUnk0x70[2];
+	mUnk0x70[3] = param_1.mUnk0x70[3];
+	mUnk0x70[4] = param_1.mUnk0x70[4];
+	mUnk0x70[5] = param_1.mUnk0x70[5];
+	mUnk0x70[6] = param_1.mUnk0x70[6];
+	mUnk0x70[7] = param_1.mUnk0x70[7];
+	mUnk0x70[8] = param_1.mUnk0x70[8];
+	mUnk0x70[9] = param_1.mUnk0x70[9];
+	mUnk0x98 = param_1.mUnk0x98;
+	mUnk0xb4 = param_1.mUnk0xb4;
+	mUnk0xd0 = param_1.mUnk0xd0;
+	mUnk0xec = param_1.mUnk0xec;
+	mUnk0xed = param_1.mUnk0xed;
+	mUnk0xee = param_1.mUnk0xee;
+	mUnk0xef = param_1.mUnk0xef;
+
+	mAdventureScores = param_1.mAdventureScores;
+	mUnk0xfc = param_1.mUnk0xfc;
+	mUnk0x108 = param_1.mUnk0x108;
+	mUnk0x114 = param_1.mUnk0x114;
+	mUnk0x118 = param_1.mUnk0x118;
+	mUnk0x124 = param_1.mUnk0x124;
+	mUnk0x128 = param_1.mUnk0x128;
+	mUnk0x12c = param_1.mUnk0x12c;
+	mUnk0x198 = param_1.mUnk0x198;
+	mUnk0x204 = param_1.mUnk0x204;
+	mUnk0x208 = param_1.mUnk0x208;
+	mUnk0x20c = param_1.mUnk0x20c;
 }
 
 // TEMPLATE: POPCAPGAME1 0x0041dcb0
@@ -470,13 +522,68 @@ void PlayerInfo::SubmitAdventureHighScore(int theScore)
 	mUnk0xec = true;
 }
 
-// STUB: POPCAPGAME1 0x00426980
+// TEMPLATE: POPCAPGAME1 0x00422360
+// exy::DataSync_SyncSTLSetImplSimple<std::set<int,std::less<int>,std::allocator<int> >,Sexy::DataSyncFunc_SyncInt>
+
+// FUNCTION: POPCAPGAME1 0x00426980
 int PlayerInfo::SyncDetails(DataSync& theSync)
 {
 	if (theSync.mReader != NULL) {
 		Reset(false);
 	}
 
+	int aVersion = 23;
+	theSync.SyncLong(aVersion);
+
+	if (theSync.mVersion < 5) {
+		theSync.SyncLong(mUnk0x28);
+		theSync.SyncLong(mUnk0x2c);
+		theSync.SyncLong(mUnk0x3c);
+		theSync.SyncLong(mUnk0x30);
+		theSync.SyncLong(mUnk0x34);
+		theSync.SyncLong(mUnk0x40);
+		theSync.SyncLong(mUnk0x44);
+		theSync.SyncString(mUnk0xb4);
+		theSync.SyncLong(mUnk0x38);
+		DataSync_SyncSTLSetImplSimple(theSync, mUnk0xfc, DataSyncFunc_SyncInt());
+		DataSync_SyncSTLSetImplSimple(theSync, mAdventureScores, DataSyncFunc_SyncInt());
+		DataSync_SyncSTLMapImplSimple(theSync, mUnk0x108, DataSyncFunc_SyncInt(), DataSyncFunc_SyncInt());
+		theSync.SyncString(mUnk0xd0);
+		theSync.SyncBoolBit(mUnk0xed);
+		theSync.SyncBoolBit(mUnk0x4c);
+		theSync.SyncBoolBit(mUnk0xee);
+		theSync.SyncBoolBit(mUnk0x60);
+		theSync.SyncBoolBit(mUnk0x61);
+		theSync.SyncBoolBit(mUnk0xef);
+		theSync.EndBit();
+		theSync.SyncLong(mUnk0x50);
+		theSync.SyncByte(mUnk0x54);
+		theSync.SyncByte(mUnk0x124);
+		theSync.SyncByte(mUnk0x128);
+		DataSync_SyncSTLSetImplSimple(theSync, mUnk0x118, DataSyncFunc_SyncString());
+		theSync.SyncLong(mUnk0x48);
+		theSync.SyncByte(mUnk0x58);
+		theSync.SyncLong(mUnk0x64);
+		theSync.SyncLong(mUnk0x204);
+		theSync.SyncLong(mUnk0x208);
+		theSync.SyncLong(mUnk0x20c);
+		mUnk0x12c.SyncState(theSync);
+		mUnk0x198.SyncState(theSync);
+		if (20 < aVersion) {
+			
+			for (int i = 0; i < 10; i--) {
+				//theSync.SyncByte(mUnk0x70[i]);
+			}
+		}
+
+		if (21 < aVersion) {
+			theSync.SyncShort(mUnk0x6c);
+		}
+
+		if (22 < aVersion) {
+			theSync.SyncShort(mUnk0x114);
+		}
+	}
 	return 0;
 }
 

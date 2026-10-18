@@ -24,6 +24,7 @@ enum PowerupType {
 
 enum StyleShot;
 enum LogicState {
+	LOGICSTATE_0 = 0,
 	LOGICSTATE_5 = 5,
 	LOGICSTATE_6 = 6
 };

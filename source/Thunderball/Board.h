@@ -41,6 +41,7 @@ class Gun;
 class PhysObj;	
 class TypingCheck;
 class TrophyInfo;
+class MemoryImage;
 
 
 // VTABLE: POPCAPGAME1 0x005d76d4 Sexy::ButtonListener
@@ -53,7 +54,7 @@ class Board : public Widget, public ButtonListener
 	TypingCheck* mTypingCheckList[9]; // +0x8c
 	ThunderballApp* mApp; // +0xb0
 	GameMode mUnk0xb4; // +0xb4
-	int mUnk0xb8; // +0xb8
+	bool mUnk0xb8; // +0xb8
 	SmartPtr<Gun> mGun; // +0xbc
 	bool mUnk0xc0; // +0xc0
 	bool mUnk0xc1; // +0xc1
@@ -114,7 +115,7 @@ class Board : public Widget, public ButtonListener
 	SlotMachineDialog* mSlotMachineDialog; // +0x164
 	ThunderButton* mMenuButton; // +0x168
 	ThunderButton* mReplayButton; // +0x16c
-	int mUnk0x170; // +0x170
+	MemoryImage* mUnk0x170; // +0x170
 	std::deque<DataWriter*> mUnk0x174; // +0x174
 	DataWriter* mUnk0x188; // +0x188
 	DataReader* mUnk0x18c; // +0x18c

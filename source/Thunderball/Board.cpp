@@ -32,14 +32,19 @@
 #include "TrophyMgr.h"
 #include "TypingCheck.h"
 
+#include <SexyAppFramework/Common.h>
 #include <SexyAppFramework/D3DInterface.h>
 #include <SexyAppFramework/DDInterface.h>
 #include <SexyAppFramework/Graphics.h>
 #include <SexyAppFramework/MemoryImage.h>
+#include <SexyAppFramework/ModVal.h>
 #include <SexyAppFramework/MusicInterface.h>
 #include <SexyAppFramework/SexyMatrix.h>
+#include <SexyAppFramework/SmartPtr.h>
 #include <SexyAppFramework/WidgetManager.h>
+
 #include <list>
+
 
 using namespace Sexy;
 
@@ -273,91 +278,88 @@ void Board::MouseWheel(int theDelta)
 // FUNCTION: POPCAPGAME1 0x00406f70
 void Board::DrawOverlay(Graphics* g)
 {
-    g->Translate(mUnk0x114, mUnk0x118);
-    
-    Graphics aBoardG(*g);
-    aBoardG.Translate(mUnk0x1a8, mUnk0x1ac);
-    
-    bool isZoomed = DoZoom(g);
-    
-    mEffectMgr->Draw(&aBoardG, 2);
-    mFloatingTextMgr->Draw(&aBoardG, 2);
-    
-    if (mCharacterMgr->mUnk0x90 != 0) {
-        mCharacterMgr->Draw(g, this); 
-    }
-    
-    if (isZoomed) {
-        mApp->mDDInterface->mD3DInterface->PopTransform();
-    }
-    
-    mEffectMgr->Draw(&aBoardG, 3);
-    mFloatingTextMgr->Draw(&aBoardG, 3);
-    
-    if (mUnk0x108 > 0 && g->mIs3D) {
-        SexyTransform2D aTransform;
-        float aScale = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp83,3296", 0.1f);
-        
-        aScale = (aScale * (20 - mUnk0x108)) / 20.0f + 1.0f;
-        
-        if (aScale > 1.0f) {
-            aTransform.Translate(-mWidth / 2.0f, -mHeight / 2.0f);
-            aTransform.Scale(aScale, aScale);
-            aTransform.Translate(mWidth / 2.0f, mHeight / 2.0f);
-            
-            mApp->mDDInterface->mD3DInterface->PushTransform(aTransform, true);
-        }
-        
-        int aColor = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp84,3307", 0xFFFFFF);
-        g->SetColorizeImages(true);
-        g->SetColor(Color(aColor));
-        
-        DrawScreenFrame(g); 
-        g->DrawImage(IMAGE_FEVERCAM, 0, 0);
-        
-        g->SetColorizeImages(false);
-        
-        if (aScale > 1.0f) {
-            mApp->mDDInterface->mD3DInterface->PopTransform();
-        }
-    }
-    
-    int aDialogAlpha = mUnk0x1bc;
-    if (aDialogAlpha != 0) {
-        
-        if (mSlotMachineDialog->mWidgetManager != NULL) {
-            mUnk0x1bc = 0; 
-            
-            Graphics aSlotG(*g);
-            aSlotG.ClipRect(mSlotMachineDialog->GetRect());
-            aSlotG.Translate(mSlotMachineDialog->mX, mSlotMachineDialog->mY);
-            
-            mSlotMachineDialog->Draw(&aSlotG);
-            
-            mUnk0x1bc = aDialogAlpha;
-        }
-        
-        if (mApp->mUpsellScreen == NULL && 
-            mApp->mDialogMap.empty() && 
-            (!mEndLevelDialog->mVisible || mEndLevelDialog->mWidgetManager == NULL)) 
-        {
-            int aMod100 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp85,3335", 100);
-            
-            // Draw dimming rect
-            g->SetColor(Color(0, (aMod100 * mUnk0x1bc) / 10));
-            g->FillRect(0, 0, mWidth, mHeight);
-            
-            g->SetColor(Color(0xffffff, (mUnk0x1bc * 255) / 10));
-            
-            g->SetColorizeImages(true);
-            g->DrawImage(IMAGE_PAUSED, 
-                         (mWidth - IMAGE_PAUSED->mWidth) / 2, 
-                         (mHeight - IMAGE_PAUSED->mHeight) / 2);
-            g->SetColorizeImages(false);
-        }
-    }
-    
-    g->Translate(-mUnk0x114, -mUnk0x118);
+	g->Translate(mUnk0x114, mUnk0x118);
+
+	Graphics aBoardG(*g);
+	aBoardG.Translate(mUnk0x1a8, mUnk0x1ac);
+
+	bool isZoomed = DoZoom(g);
+
+	mEffectMgr->Draw(&aBoardG, 2);
+	mFloatingTextMgr->Draw(&aBoardG, 2);
+
+	if (mCharacterMgr->mUnk0x90 != 0) {
+		mCharacterMgr->Draw(g, this);
+	}
+
+	if (isZoomed) {
+		mApp->mDDInterface->mD3DInterface->PopTransform();
+	}
+
+	mEffectMgr->Draw(&aBoardG, 3);
+	mFloatingTextMgr->Draw(&aBoardG, 3);
+
+	if (mUnk0x108 > 0 && g->mIs3D) {
+		SexyTransform2D aTransform;
+		float aScale = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp83,3296", 0.1f);
+
+		aScale = (aScale * (20 - mUnk0x108)) / 20.0f + 1.0f;
+
+		if (aScale > 1.0f) {
+			aTransform.Translate(-mWidth / 2.0f, -mHeight / 2.0f);
+			aTransform.Scale(aScale, aScale);
+			aTransform.Translate(mWidth / 2.0f, mHeight / 2.0f);
+
+			mApp->mDDInterface->mD3DInterface->PushTransform(aTransform, true);
+		}
+
+		int aColor = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp84,3307", 0xFFFFFF);
+		g->SetColorizeImages(true);
+		g->SetColor(Color(aColor));
+
+		DrawScreenFrame(g);
+		g->DrawImage(IMAGE_FEVERCAM, 0, 0);
+
+		g->SetColorizeImages(false);
+
+		if (aScale > 1.0f) {
+			mApp->mDDInterface->mD3DInterface->PopTransform();
+		}
+	}
+
+	int aDialogAlpha = mUnk0x1bc;
+	if (aDialogAlpha != 0) {
+
+		if (mSlotMachineDialog->mWidgetManager != NULL) {
+			mUnk0x1bc = 0;
+
+			Graphics aSlotG(*g);
+			aSlotG.ClipRect(mSlotMachineDialog->GetRect());
+			aSlotG.Translate(mSlotMachineDialog->mX, mSlotMachineDialog->mY);
+
+			mSlotMachineDialog->Draw(&aSlotG);
+
+			mUnk0x1bc = aDialogAlpha;
+		}
+
+		if (mApp->mUpsellScreen == NULL &&
+			mApp->mDialogMap.empty() &&
+			(!mEndLevelDialog->mVisible || mEndLevelDialog->mWidgetManager == NULL)) {
+			int aMod100 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp85,3335", 100);
+
+			// Draw dimming rect
+			g->SetColor(Color(0, (aMod100 * mUnk0x1bc) / 10));
+			g->FillRect(0, 0, mWidth, mHeight);
+
+			g->SetColor(Color(0xffffff, (mUnk0x1bc * 255) / 10));
+
+			g->SetColorizeImages(true);
+			g->DrawImage(IMAGE_PAUSED, (mWidth - IMAGE_PAUSED->mWidth) / 2, (mHeight - IMAGE_PAUSED->mHeight) / 2);
+			g->SetColorizeImages(false);
+		}
+	}
+
+	g->Translate(-mUnk0x114, -mUnk0x118);
 }
 
 // FUNCTION: POPCAPGAME1 0x00410e10
@@ -1010,13 +1012,13 @@ void Board::UpdateTwoPlayerStats()
 {
 	int dVar4 = 0;
 
-	if (mLogicMgr->mUnk0x178 < mLogicMgr->mUnk0x174) {
+	if (mLogicMgr->mUnk0x174[1] < mLogicMgr->mUnk0x174[0]) {
 		mApp->mUnk0x87c++;
 		dVar4 = 0;
 	}
 	else {
 		dVar4 = -1;
-		if (mLogicMgr->mUnk0x174 < mLogicMgr->mUnk0x178) {
+		if (mLogicMgr->mUnk0x174[0] < mLogicMgr->mUnk0x174[1]) {
 			mApp->mUnk0x880++;
 			dVar4 = 1;
 		}
@@ -1038,8 +1040,8 @@ void Board::UpdateTwoPlayerStats()
 		mApp->mUnk0x890 = 0;
 	}
 
-	mApp->mUnk0x88c += mLogicMgr->mUnk0x174;
-	mApp->mUnk0x890 += mLogicMgr->mUnk0x178;
+	mApp->mUnk0x88c += mLogicMgr->mUnk0x174[0];
+	mApp->mUnk0x890 += mLogicMgr->mUnk0x174[1];
 }
 
 // FUNCTION: POPCAPGAME1 0x00402760
@@ -1249,7 +1251,7 @@ void Board::CheckTrophyAccomplishments()
 {
 	if (mApp->mCurProfile != NULL && mUnk0x128 != NULL && mUnk0xb4 != DEMO) {
 		if ((mUnk0x128->mUnk0x74 == 0 && mUnk0x128->mUnk0x6c < 2) && (mUnk0x128->mUnk0x88.empty() && mDebugMgr->mUnk0x20 == 0) || mDebugMgr->mUnk0x21 != 0) {
-			mApp->mCurProfile->CheckTrophyTopScore(mUnk0x128->mId, mLogicMgr->mUnk0x174);
+			mApp->mCurProfile->CheckTrophyTopScore(mUnk0x128->mId, mLogicMgr->mUnk0x174[0]);
 		}
 
 		if (mEndLevelDialog->mUnk0x180 == 6) {
@@ -1300,7 +1302,7 @@ void Board::CalcEndLevelDialog()
 			iVar3 = (mUnk0x128->mUnk0x80 - mUnk0x128->mUnk0x7c) / 28;
 		}
 		if (iVar3 - 1 <= mUnk0xf0) {
-			cVar2 = mUnk0x128->mUnk0x70 < mLogicMgr->mUnk0x174;
+			cVar2 = mUnk0x128->mUnk0x70 < mLogicMgr->mUnk0x174[0];
 		}
 	}
 
@@ -1675,13 +1677,13 @@ bool Board::NeedSaveGame()
 		return true;
 	}
 	if (mUnk0xb4 == GameMode::QUICK_PLAY) {
-		return mLogicMgr->mUnk0x174 > 0;
+		return mLogicMgr->mUnk0x174[0] > 0;
 	}
 	if (mUnk0xb4 == GameMode::CHALLENGE) {
-		return mUnk0xf0 > 0 || mLogicMgr->mUnk0x174 > 0;
+		return mUnk0xf0 > 0 || mLogicMgr->mUnk0x174[0] > 0;
 	}
 	if (mUnk0xb4 == GameMode::DUEL) {
-		return mLogicMgr->mUnk0x174 > 0 || mLogicMgr->mUnk0x178 > 0;
+		return mLogicMgr->mUnk0x174[0] > 0 || mLogicMgr->mUnk0x174[1] > 0;
 	}
 	return false;
 }
@@ -1700,7 +1702,7 @@ DataWriter* Board::GetSyncPoint()
 // FUNCTION: POPCAPGAME1 0x00424d40
 void Board::ShowReplay(int param_1, bool param_2)
 {
-	if (-1 < param_1  || -1 < mUnk0x174.size() && param_1 < mUnk0x174.size()) {
+	if (-1 < param_1 || -1 < mUnk0x174.size() && param_1 < mUnk0x174.size()) {
 		DataWriter* aReplay = mUnk0x174.front();
 		if (aReplay != NULL) {
 			if (mUnk0x188 == NULL) {
@@ -1709,7 +1711,7 @@ void Board::ShowReplay(int param_1, bool param_2)
 					mLogicMgr->WriteClickTimes();
 				}
 			}
-			
+
 			if (SetSyncPoint(aReplay, true)) {
 				if (param_2) {
 					if (mUnk0x188 != NULL) {
@@ -1730,19 +1732,21 @@ void Board::ShowReplay(int param_1, bool param_2)
 					mFloatingTextMgr->Clear();
 					mEffectMgr->Clear();
 					mSoundMgr->Clear();
-				} else {
+				}
+				else {
 					mUnk0xe4 = 50;
 					mEndLevelDialog->SetVisible(false);
 					ShowReplayDialog();
 				}
-			} else {
+			}
+			else {
 				DeleteReplays(true);
 				Pause(true);
 				mApp->DoDialogScroll(34, true, "Replay Load Error", "There was an error loading the replay.", "Ok", 3);
 				if (mUnk0xc5) {
 					EndReplay();
 				}
-			}			
+			}
 		}
 	}
 }
@@ -1772,7 +1776,8 @@ bool Board::LoadGame(Buffer* param_1)
 		mInterfaceMgr->Clear();
 		mSoundMgr->Clear();
 		mLogicMgr->ReInitLevel();
-	} else if (mLogicMgr->mUnk0x4 == 9) {
+	}
+	else if (mLogicMgr->mUnk0x4 == 9) {
 		DoCharacterDialog(false);
 	}
 
@@ -1795,7 +1800,7 @@ void Board::SaveGame()
 			mApp->WriteBytesToFile(aFileName, aSync.mWriter->mMemoryHandle, aSync.mWriter->mMemoryLength);
 		}
 	}
-} 
+}
 
 // STUB: POPCAPGAME1 0x004101a0
 void Board::MakeThumbnail()
@@ -1811,13 +1816,15 @@ void Board::SetupLevel()
 		if (mUnk0xec == 1) {
 			if (mUnk0x128->mUnk0x68 < 1) {
 				mLogicMgr->mUnk0x130 = 25;
-			} else {
+			}
+			else {
 				mLogicMgr->mUnk0x130 = mUnk0x128->mUnk0x68;
 			}
 
 			if (mUnk0x128->mUnk0x6c < 1) {
 				mUnk0xdc = 1;
-			} else {
+			}
+			else {
 				mUnk0xdc = mUnk0x128->mUnk0x6c;
 			}
 		}
@@ -1826,21 +1833,24 @@ void Board::SetupLevel()
 			int dVar2;
 			if (!mLogicMgr->mUnk0x124) {
 				dVar2 = 10;
-			} else {
-				dVar2 = ModVal(0,"SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp22,1658",6);
+			}
+			else {
+				dVar2 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp22,1658", 6);
 			}
 
 			mLogicMgr->mUnk0x17c[1] = dVar2;
 			mLogicMgr->mUnk0x17c[0] = dVar2;
-		} else if (mUnk0xec == 1) {
+		}
+		else if (mUnk0xec == 1) {
 			mLogicMgr->mUnk0x17c[0] = mUnk0x128->mUnk0x64;
-		} else if (mLogicMgr->mUnk0x17c[0] < 1) {
+		}
+		else if (mLogicMgr->mUnk0x17c[0] < 1) {
 			mLogicMgr->mUnk0x17c[0] = 1;
 		}
 
 		if (mUnk0xec == 1 || mUnk0x128->mUnk0x74 != 0) {
-			mLogicMgr->mUnk0x178 = 0;
-			mLogicMgr->mUnk0x174 = 0;
+			mLogicMgr->mUnk0x174[1] = 0;
+			mLogicMgr->mUnk0x174[0] = 0;
 		}
 
 		mLogicMgr->mUnk0xfb = mUnk0x128->mUnk0x75;
@@ -1870,6 +1880,177 @@ void Board::SetupLevel()
 // STUB: POPCAPGAME1 0x00429d10
 void Board::LoadLevel2(std::string& param_1)
 {
+	std::string aLevelName;
+	if (param_1.empty()) {
+		// TODO file dialog stuff
+	}
+	else {
+		aLevelName = param_1;
+	}
+
+	if (EditingLevel()) {
+		mLevelEditor->DoAutoSave(false);
+	}
+
+	mUnk0xe9 = true;
+	Clear(false);
+	mUnk0x1d4 = "";
+
+	std::string aFilePath = GetFileName(aLevelName);
+	std::list<Sexy::SmartPtr<Sexy::PhysObj>> anObjList;
+	if (!LoadLevelBase(aFilePath, anObjList, false)) {
+		Clear(true);
+		anObjList.clear();
+	}
+
+	if (aFilePath[0] == '_') {
+		mUnk0xb8 = true;
+	}
+	else {
+		std::string aBasePath = "levels/_base.dat";
+		if (!LoadLevelBase(aBasePath, anObjList, true)) {
+			Clear(true);
+		}
+	}
+
+	for (std::list<Sexy::SmartPtr<Sexy::PhysObj>>::iterator it = anObjList.begin(); it != anObjList.end(); ++it)
+	{
+		Sexy::PhysObj* anObj = it->get(); 
+		anObj->mUnk0x2a = true;
+		AddObj(anObj);
+	}
+
+	if (!mUnk0xc4) {
+		std::string anImagePath = "levels/" + GetFileName(aFilePath);
+		bool local_139 = false;
+		Image* aLevelImage = GetImageMgr()->GetImage(&anImagePath, &local_139, true);
+		if (!mUnk0x123) {
+			if (aLevelImage == NULL) {
+				MemoryImage* aMemoryImage = new MemoryImage();
+				aMemoryImage->Create(646, 543);
+				Graphics aG(aMemoryImage);
+
+				float local_158;
+				float local_19c;
+				float local_154;
+				float local_190;
+				float local_144;
+				float local_14c;
+
+				if (mUnk0x124 == 1) {
+					local_158 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp26,1936", 30);
+					local_19c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp27,1936", 0.2f);
+					local_154 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp28,1937", 0);
+					local_190 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp29,1937", -0.0f);
+					local_144 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp30,1938", 0);
+					local_14c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp31,1938", -0.1f);
+				}
+				else if (mUnk0x124 == 2) {
+					local_158 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp32,1943", 0);
+					local_19c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp33,1943", -0.0f);
+					local_154 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp34,1944", 160);
+					local_190 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp35,1944", -0.1f);
+					local_144 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp36,1945", 160);
+					local_14c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp37,1945", -0.2f);
+				}
+				else if (mUnk0x124 == 3) {
+					local_158 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp38,1949", 90);
+					local_19c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp39,1949", -0.1);
+					local_154 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp40,1950", 120);
+					local_190 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp41,1950", -0.1);
+					local_144 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp42,1951", 120);
+					local_14c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp43,1951", -0.2);
+				}
+				else {
+					local_158 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp44,1955", 0);
+					local_19c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp45,1955", 0.0f);
+					local_154 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp46,1956", 0);
+					local_190 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp47,1956", 0.0f);
+					local_144 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp48,1957", 120);
+					local_14c = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp49,1957", -0.2f);
+				}
+
+				for (int i = 0; i < aMemoryImage->mWidth; i++) {
+					int iVar13 = (i * local_144 + local_158);
+					if (iVar13 < 0) {
+						iVar13 = 0;
+					} else if (255 < iVar13) {
+						iVar13 = 255;
+					}
+					int iVar9 = (i * local_190 + local_158);
+					if (iVar9 < 0) {
+						iVar9 = 0;
+					} else if (255 < iVar9) {
+						iVar9 = 255;
+					}
+					int iVar11 = (i * local_14c + local_158);
+					if (iVar11 < 0) {
+						iVar11 = 0;
+					} else if (255 < iVar11) {
+						iVar11 = 255;
+					}
+
+					aG.SetColor(Color(iVar13, iVar9, iVar11));
+					aG.FillRect(0, i, aMemoryImage->mHeight, 1);
+				}
+
+				GetImageMgr()->PutImage(&anImagePath, aMemoryImage, true);
+				local_139 = false;
+			}
+
+			Sexy::SmartPtr<Poly> aPoly = new Poly();
+			aPoly->mUnk0x94 = anImagePath;
+			aPoly->LoadImage();
+			aPoly->mUnk0x24 = false;
+			aPoly->mUnk0x27 = true;
+			aPoly->mUnk0x2f = local_139;
+			if (aPoly->mUnk0xb4 != NULL) {
+				mUnk0x170 = aPoly->mUnk0xb4;
+				aPoly->InitFromRect(0.0f, 0.0f, aPoly->mUnk0xb4->mWidth, aPoly->mUnk0xb4->mHeight);
+				aPoly->mUnk0x134 = -1;
+
+				float local_14c;
+				float local_150;
+
+				if (aPoly->mUnk0xb4->mWidth == 646 && aPoly->mUnk0xb4->mHeight == 543) {
+					mUnk0xe9 = false;
+					local_14c = ModVal(0,"SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp50,1994", 325);
+        			local_150 = ModVal(0,"SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\Board.cpp51,1995", 284);
+				} else {
+					local_14c = 400 - mUnk0x1a8;
+					local_150 = 300 - mUnk0x1ac;
+				}
+				aPoly->SetPos(local_14c, local_150);
+			}
+			aPoly->mUnk0x2a = true;
+			AddObj(aPoly);
+		}
+	}
+	
+	for (std::list<Sexy::SmartPtr<Sexy::PhysObj>>::iterator it = anObjList.begin(); it != anObjList.end(); ++it)
+	{
+		Sexy::PhysObj* anObj = it->get(); 
+		anObj->mUnk0x2a = false;
+		AddObj(anObj);
+	}
+
+
+	mUnk0x1d4.clear();
+	if (mApp->mGameMode == UNKNOWN_0) {
+		std::string aTitle = GetFileName(mUnk0x1d4);
+		SetAppTitle(aTitle);
+	} else {
+		std::string aTitle = "";
+		SetAppTitle(aTitle);
+	}
+
+	SetupLevel();
+	GetThunderballApp()->ClearUpdateBacklog(false);
+	/*  if (local_140[0] != '\0') {
+		(this_04->mApp->SexyApp).mGameMode = 0_UNKNOWN;
+		this_04->mbr_0xb4 = 0;
+	}*/
+	CheckForBackground();
 }
 
 // FUNCTION: POPCAPGAME1 0x0042aae0

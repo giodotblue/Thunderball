@@ -328,7 +328,7 @@ void InterfaceMgr::UpdateShotMeter()
 bool InterfaceMgr::IsScoreAccurate()
 {
 	for (int i = 0; i < 2; ++i) {
-		if ((&mUnk0x94)[i] != (&mBoard->mLogicMgr->mUnk0x174)[i]) {
+		if ((&mUnk0x94)[i] != mBoard->mLogicMgr->mUnk0x174[i]) {
 			return false;
 		}
 	}
@@ -393,8 +393,8 @@ void InterfaceMgr::CheckHighScoreSync()
 void InterfaceMgr::SettleDown()
 {
 	LogicMgr* aLogicMgr = mBoard->mLogicMgr;
-	mUnk0x94 = aLogicMgr->mUnk0x174;
-	mUnk0x98 = aLogicMgr->mUnk0x178;
+	mUnk0x94 = aLogicMgr->mUnk0x174[0];
+	mUnk0x98 = aLogicMgr->mUnk0x174[1];
 	CheckHighScoreSync();
 }
 
@@ -409,7 +409,7 @@ void InterfaceMgr::UpdateScoreDisp()
 	for (int i = 0; i < 2; ++i) {
 		LogicMgr* aLogicMgr = mBoard->mLogicMgr;
 		int aDisplayedScore = (&mUnk0x94)[i];
-		int aScore = (&aLogicMgr->mUnk0x174)[i];
+		int aScore = aLogicMgr->mUnk0x174[i];
 		if (aDisplayedScore == aScore) {
 			continue;
 		}

@@ -10,6 +10,7 @@
 #include "EndLevelDialog.h"
 #include "FloatingTextMgr.h"
 #include "Gun.h"
+#include "Hole.h"
 #include "InterfaceMgr.h"
 #include "Mover.h"
 #include "PegInfo.h"
@@ -17,13 +18,18 @@
 #include "Poly.h"
 #include "Res.h"
 #include "SoundMgr.h"
+#include "StatsMgr.h"
 #include "ThunderButton.h"
 #include "ThunderCommon.h"
+#include "PhysObj.h"
 #include "ThunderballApp.h"
 
 #include <SexyAppFramework/Common.h>
 #include <SexyAppFramework/SoundInstance.h>
+#include <SexyAppFramework/SmartPtr.h>
 #include <SexyAppFramework/WidgetManager.h>
+
+#include <vector>
 
 using namespace Sexy;
 
@@ -359,7 +365,7 @@ bool LogicMgr::MouseUp(int param_1, int param_2, int param_3, bool param_4)
 		mUnk0x1e = false;
 	}
 
-	if (mUnk0x244[mUnk0x128] == 0 || param_4) {
+	if (mUnk0x244[mUnk0x128] == false || param_4) {
 		if (0 < mUnk0x1e4[mUnk0x128] && (0 < param_3 && bVar1)) {
 			FlipperClick(false);
 		}
@@ -579,7 +585,7 @@ void LogicMgr::BeginTurn2()
 	}
 }
 
-void LogicMgr::BeginShot(bool param_1)
+void LogicMgr::BeginShot(bool param_1) 
 {
 	// TODO
 }
@@ -589,10 +595,109 @@ void LogicMgr::StartInitLevel()
 	// TODO
 }
 
-// STUB: POPCAPGAME1 0x0045dda0
+// FUNCTION: POPCAPGAME1 0x0045dda0
 void LogicMgr::InitLevel(bool param_1, bool param_2, bool param_3)
 {
-	// TODO
+	int local_1c = mUnk0x128;
+	if (local_1c != 0 && local_1c != 1) {
+		local_1c = 0;
+	}
+
+	mBoard->mAIMgr->Clear();
+	Clear(false, param_3);
+	if (mBoard->mApp->mCurProfile != NULL) {
+		mUnk0x15c = mBoard->mApp->mCurProfile->mUnk0x28;
+		mUnk0x160 = mBoard->mApp->mCurProfile->mUnk0x208;
+	}
+
+	if (param_1) {
+		for (int i = 0; i < 2; i++) {
+			int dVar5;
+			if (!mUnk0x124) {
+				dVar5 = 10;
+			} else {
+				dVar5 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1058,1150", 6);
+			}
+
+			mUnk0x174[i] = dVar5;
+		}
+	}
+
+	mUnk0x134 = 0;
+	if (!param_3) {
+		for (std::list<Sexy::SmartPtr<PhysObj>>::iterator it = mBoard->mUnk0x190.begin(); it != mBoard->mUnk0x190.end(); ++it) {
+			PhysObj* anObj = it->get();
+			if (anObj->mUnk0x78 == "flipper") {
+				mBoard->mUnk0x190.erase(it);
+				delete anObj;
+			}
+		}
+	} else {
+		for (std::list<Sexy::SmartPtr<PhysObj>>::iterator it = mBoard->mUnk0x190.begin(); it != mBoard->mUnk0x190.end(); ++it) {
+			PhysObj* anObj = it->get();
+			anObj->mPegInfo->Reset();
+		}
+	}
+
+	CalcGunAngle(true);
+	if (!mBoard->EditingLevel() && !param_3) {
+		MakeGoalPegs();
+		MakeScorePeg();
+		MakePowerupPeg();
+	};
+	mUnk0x114 = CalcScoreMult(mUnk0x358.size());
+	mUnk0x118 = CalcMusicIntensity(mUnk0x358.size());
+	mUnk0xf6 = false;
+	mUnk0xf7 = false;
+	mUnk0x24 = (uint)(mUnk0x124);
+
+	static int mLastCurPlayer = -1;
+	static int DAT_00650a3c = 0;
+
+	if (!mUnk0x124) {
+		mUnk0x128 = 0;
+	} else if (param_2) {
+		int uVar8 = Rand() & 0x80000001;
+		if (uVar8 < 0) {
+			uVar8 = (uVar8 - 1 | 0xfffffffe) + 1;
+		}
+
+		mUnk0x128 = uVar8;
+		if (uVar8 == mLastCurPlayer) {
+			DAT_00650a3c++;
+			if (1 < DAT_00650a3c) {
+				mUnk0x128 = 1 - uVar8;
+				DAT_00650a3c = 1;
+				mLastCurPlayer = 1 - uVar8;
+			}
+		} else {
+			DAT_00650a3c = 1;
+			mLastCurPlayer = uVar8;
+		}
+	} else {
+		mUnk0x128 = local_1c;
+	}
+
+	ActivateFreeBall(false);
+	mBoard->mInterfaceMgr->SettleDown();
+	mBoard->mCharacterMgr->SetCurCharacter(mUnk0x174[mUnk0x128]);
+	if (mUnk0x340.size() != 0) {
+		if (param_1 || mBoard->mUnk0xec == 1) {
+			mBoard->mInterfaceMgr->SetNumBalls(0);
+			mBoard->mInterfaceMgr->AddTopBalls(mUnk0x174[mUnk0x128]);
+		} else {
+			mBoard->mInterfaceMgr->SetNumBalls(mUnk0x174[mUnk0x128]);
+		}
+	}
+
+	if (mUnk0x124 && param_2) {
+		for (std::list<Sexy::SmartPtr<PhysObj>>::iterator it = mBoard->mUnk0x190.begin(); it != mBoard->mUnk0x190.end(); ++it) {
+			PhysObj* anObj = it->get();
+			if (anObj->mUnk0x5c == "fever") {
+				static_cast<Hole*>(anObj)->mUnk0xf0 /= 2;
+			}
+		}
+	}
 }
 
 void LogicMgr::ReInitLevel()
@@ -1056,16 +1161,97 @@ void LogicMgr::MakePowerupPeg()
 	// TODO
 }
 
-// STUB: POPCAPGAME1 0x00458110
+// FUNCTION: POPCAPGAME1 0x00458110
 void LogicMgr::MakeScorePeg()
 {
-	// TODO
+	if (2 < mBoard->mApp->GetMaxLevel()) {
+		std::vector<SmartPtr<PhysObj>> aScorePegs;
+		for (std::set<SmartPtr<PhysObj>>::iterator anItr = mUnk0x364.begin(); anItr != mUnk0x364.end(); ++anItr) {
+			PhysObj* aPhysObj = anItr->get();
+			if (mUnk0x170 != NULL) {
+				if (aScorePegs.empty()) {
+					if (aPhysObj->mPegInfo->mPegType != GOAL && !aPhysObj->mPegInfo->mUnk0x14) {
+						aPhysObj->SetPegType(NORMAL);
+					}
+				}
+			}
+		}
+
+		if (aScorePegs.size() != 0) {
+			SmartPtr<PhysObj> aScorePeg = aScorePegs[Rand() % aScorePegs.size()];
+			aScorePeg->SetPegType(SCORE);
+			if (mUnk0x4 != 0) {
+				aScorePeg->mPegInfo->DoFlash(2);
+			}
+		}
+	}
 }
 
-// STUB: POPCAPGAME1 0x00457960
+// STUB: POPCAPGAME1 0x0043d430
+void ShufflePegs(std::vector<PhysObj*>& param_1)
+{
+}
+
+// FUNCTION: POPCAPGAME1 0x00457960
 void LogicMgr::MakeGoalPegs()
 {
-	// TODO
+	std::vector<PhysObj*> aNormalPegs;
+
+	for (std::list<SmartPtr<PhysObj>>::iterator anItr = mBoard->mUnk0x190.begin();
+		 anItr != mBoard->mUnk0x190.end();
+		 ++anItr) {
+		PhysObj* aPhysObj = anItr->get();
+		if (aPhysObj->mPegInfo != NULL) {
+			aPhysObj->mPegInfo->mUnk0x1c = 0.0f;
+			aPhysObj->mPegInfo->SetHit(false);
+			aPhysObj->SetActive(true);
+			mUnk0x340.push_back(aPhysObj);
+		}
+
+		if (!aPhysObj->mPegInfo->mUnk0x15) {
+			if (aPhysObj->mPegInfo->mPegType == GOAL) {
+				mUnk0x358.insert(aPhysObj);
+			} else {
+				mUnk0x364.insert(aPhysObj);
+			}
+		} else {
+			aPhysObj->SetPegType(NORMAL);
+			aNormalPegs.push_back(aPhysObj);
+		}
+	}
+
+	ShufflePegs(aNormalPegs);
+
+	int dVar12 = mUnk0x130;
+	if (dVar12 == 0) {
+		dVar12 = 25;
+	}
+
+	while (dVar12 < mUnk0x358.size() && !aNormalPegs.empty()) {
+		PhysObj* aPhysObj = aNormalPegs.back();
+		mUnk0x358.insert(aPhysObj);
+		aNormalPegs.pop_back();
+	}
+
+	for (std::vector<PhysObj*>::iterator anItr = aNormalPegs.begin(); anItr != aNormalPegs.end(); ++anItr) {
+		PhysObj* aPhysObj = *anItr;
+		mUnk0x364.insert(aPhysObj);
+	}
+
+	for (std::set<SmartPtr<PhysObj>>::iterator anItr = mUnk0x364.begin(); anItr != mUnk0x358.end(); ++anItr) {
+		PhysObj* aPhysObj = anItr->get();
+		if (aPhysObj->mPegInfo->mPegType != NORMAL) {
+			mBoard->mApp->GetMaxLevel();
+			if(!mBoard->mApp->OnMaxLevel()) {
+				aPhysObj->SetPegType(NORMAL);
+			}
+		}
+	}
+
+	for (std::set<SmartPtr<PhysObj>>::iterator anItr = mUnk0x358.begin(); anItr != mUnk0x358.end(); ++anItr) {
+		PhysObj* aPhysObj = anItr->get();
+		aPhysObj->SetPegType(GOAL);
+	}
 }
 
 void LogicMgr::ClearFlipperSpace()
@@ -1514,9 +1700,153 @@ void LogicMgr::UpdateTotalMiss()
 	// TODO
 }
 
+// FUNCTION: POPCAPGAME1 0x0045d900
 void LogicMgr::Clear(bool param_1, bool param_2)
 {
-	// TODO
+	std::string aSongs = "pegsongs/";
+	SetState(LOGICSTATE_0);
+	mUnk0x8 = 0;
+	mUnk0xc = 0;
+	mUnk0x10 = 0;
+	mUnk0x14 = 0;
+	mUnk0x18 = false;
+	mUnk0x19 = false;
+	mUnk0x1a = false;
+	mUnk0x1b = false;
+	mUnk0x1c = false;
+	mUnk0x101 = false;
+	mUnk0x1d = false;
+	mUnk0x1e = false;
+	mUnk0x20 = false;
+	mUnk0x1f = false;
+	mUnk0x21 = false;
+	mUnk0x68 = false;
+	mUnk0x69 = false;
+	mUnk0x100 = false;
+	mUnk0x24 = 0;
+	mUnk0x50 = 0;
+	mUnk0x2c = 0;
+	mUnk0x30 = 0;
+	mUnk0x34 = 0;
+	mUnk0x38 = 0;
+	mUnk0x3c = 0;
+	mUnk0x44 = 0;
+	mUnk0x40 = 0;
+	mUnk0x48 = 0;
+	mUnk0x4c = 0;
+	mUnk0x120 = 0;
+	mUnk0x28 = 0;
+	mUnk0x80 = "";
+	mUnk0xa4 = 0;
+	mUnk0xa0 = 0;
+	mUnk0xa8 = false;
+	mUnk0xaa = false;
+	mUnk0xa9 = false;
+	mUnk0x70 = GetBaseMouseWheelMove();
+	mUnk0xe8 = 0;
+	mUnk0xe0 = 0.0f;
+	mUnk0xec = false;
+	mUnk0xe4 = 0.0f;
+	mUnk0xed = false;
+	mUnk0xf0 = 0;
+	mUnk0xf4 = false;
+	mUnk0xf5 = false;
+	mUnk0xf6 = false;
+	mUnk0xf7 = false;
+	mUnk0xf8 = false;
+	mUnk0xf9 = false;
+	mUnk0xfa = false;
+	mUnk0xff = false;
+	mUnk0xfc = false;
+	mUnk0xfd = false;
+	mUnk0xfe = false;
+	mUnk0x16c = 0;
+	mUnk0x108 = 0;
+	mUnk0x10c = 0;
+	mUnk0x110 = 0;
+	mUnk0x114 = 0;
+	mUnk0x118 = 0;
+	mUnk0x11c = 0;
+	mUnk0x14c = -1;
+	mUnk0x150 = -1;
+	mUnk0x330 = 0;
+	mUnk0x334 = 0;
+	mUnk0x128 = 0;
+	mUnk0x12c = 0;
+	mUnk0x138 = 0;
+	mUnk0x13c = 0;
+	mUnk0x140 = 0;
+	mUnk0x144 = 0;
+	mUnk0x148 = 0;
+	mUnk0x154 = 0;
+	mUnk0x158 = 0;
+	mUnk0x15c = 0;
+	mUnk0x164 = 0;
+	mUnk0x168 = 0;
+	mUnk0x160 = 0;
+	mUnk0x320 = 0;
+	mUnk0x324 = 0;
+	mUnk0x338 = 0;
+	mUnk0x33c = 0;
+	KillSlowMoSound();
+	KillSighSound();
+	if (!param_2) {
+		mUnk0x170 = NULL;
+		mUnk0x340.clear();
+		mUnk0x358.clear();
+		mUnk0x364.clear();
+	}
+
+	mUnk0x34c.clear();
+	mLevelStats->Clear();
+	mUnk0xc4.clear();
+	mUnk0xd0.clear();
+	mUnk0xd0.reserve(60000);
+	mUnk0xb4.clear();
+	mUnk0x1d4[0] = 0;
+	mUnk0x1d4[1] = 0;
+	mUnk0x1dc[0] = 0;
+	mUnk0x1dc[1] = 0;
+	mUnk0x1e4[0] = 0;
+	mUnk0x1e4[1] = 0;
+	mUnk0x1e4[2] = 0;
+	mUnk0x1e4[3] = 0;
+	mFreeBallCount[0] = 0;
+	mFreeBallCount[1] = 0;
+	mUnk0x1fc[0] = 0;
+	mUnk0x1fc[1] = 0;
+	mUnk0x1fc[2] = 0;
+	mUnk0x1fc[3] = 0;
+	for (int i = 0; i < 2; ++i) {
+		mUnk0x60[i] = 0;
+		mUnk0x248[i].Reset();
+	}
+
+	if (param_1) {
+		mUnk0xfb = false;
+		mUnk0x124 = false;
+		mUnk0x174[1] = 0;
+		mUnk0x174[0] = 0;
+		mUnk0x32c = 0;
+		mUnk0x328 = 0;
+		mUnk0x17c[1] = 0;
+		mUnk0x17c[0] = 0;
+		mUnk0x184[1] = 0;
+		mUnk0x184[0] = 0;
+		mUnk0x18c[0] = "Player1";
+		mUnk0x18c[1] = "Player2";
+		mUnk0x1c4[1] = 1;
+		mUnk0x1c4[0] = 1;
+		mUnk0x244[1] = false;
+		mUnk0x244[0] = false;
+		mUnk0x74[1] = 0;
+		mUnk0x74[0] = 0;
+		mUnk0x130 = 0;
+	} else {
+		int temp = mUnk0x174[1];
+		mUnk0x328 = mUnk0x174[0];
+		mUnk0x32c = temp;
+	}
 }
 
 // STUB: POPCAPGAME1 0x00469f30

@@ -5,26 +5,29 @@
 
 namespace Sexy
 {
-class LevelStats;
 class DataSync;
+
+class LevelStats {
+public:
+	void Clear() {}
+};
 
 class TrophyStats {
 public:
-    int mUnk0x0; // +0x0
-    int mUnk0x4; // +0x4
+	int mUnk0x0; // +0x0
+	int mUnk0x4; // +0x4
 };
 
-class StatsMgr
-{
-  public:
+class StatsMgr {
+public:
 	char mPadding[0x18];
 	std::string mWelcomeLabel; // +0x18
 	int mUnk0x2c;              // +0x2C
-	
+
 	StatsMgr();
 
-	LevelStats*  GetStageStatsForLevel(std::string& param_1);
-	LevelStats*  GetStatsForLevel(std::string& param_1);
+	LevelStats* GetStageStatsForLevel(std::string& param_1);
+	LevelStats* GetStatsForLevel(std::string& param_1);
 	TrophyStats* GetStatsForTrophy(int param_1);
 
 	void IncCharacterCount(int param_1);

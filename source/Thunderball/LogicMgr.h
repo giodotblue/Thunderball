@@ -76,8 +76,7 @@ public:
 	bool mUnk0x69;                          // +0x69
 	char mUnk0x6a[6];                       // +0x6a
 	float mUnk0x70;                         // +0x70
-	int mUnk0x74;                           // +0x74
-	int mUnk0x78;                           // +0x78
+	int mUnk0x74[2];                        // +0x74
 	std::string mUnk0x80;                   // +0x80
 	int mUnk0x98;                           // +0x98
 	int mUnk0x9c;                           // +0x9c
@@ -85,7 +84,10 @@ public:
 	bool mUnk0xa4;                          // +0xa4
 	bool mUnk0xa5;                          // +0xa5
 	bool mUnk0xa6;                          // +0xa6
-	char mUnk0xa7[5];                       // +0xa7
+	bool mUnk0xa7;                          // +0xa7
+	bool mUnk0xa8;                          // +0xa8
+	bool mUnk0xa9;                          // +0xa9
+	bool mUnk0xaa;                          // +0xaa
 	SoundInstance* mUnk0xac;                // +0xac
 	SoundInstance* mUnk0xb0;                // +0xb0
 	std::vector<PegHitInfo> mUnk0xb4;       // +0xb4
@@ -139,13 +141,11 @@ public:
 	int mUnk0x168;                          // +0x168
 	int mUnk0x16c;                          // +0x16c
 	SmartPtr<PhysObj> mUnk0x170;            // +0x170
-	int mUnk0x174;                          // +0x174
-	int mUnk0x178;                          // +0x178
+	int mUnk0x174 [2];                      // +0x174
 	int mUnk0x17c [2];                      // +0x17c
 	int mUnk0x184 [2];                      // +0x184
 	std::string mUnk0x18c[2];               // +0x18c
-	int mUnk0x1c4;                          // +0x1c4
-	int mUnk0x1c8;                          // +0x1c8
+	int mUnk0x1c4[2];                       // +0x1c4
 	PowerupType mUnk0x1cc[2];               // +0x1cc
 	int mUnk0x1d4[2];                       // +0x1d4
 	int mUnk0x1dc[2];                       // +0x1dc

@@ -1857,3 +1857,13 @@ void Sexy::DrawCharacterPlusFrame(Graphics *g, int param_2, int param_3, int par
         ModVal(0, "SEXY_SEXYMODVAL.\\StoryScreen.cpp86,688", 16) + aImage->mHeight
     ), IMAGE_DLG_BLUEFRAME);
 }
+
+// STUB: POPCAPGAME1 0x0041bb80
+void Sexy::SetAppTitle(std::string& theTitle) {
+
+}
+
+// FUNCTION: POPCAPGAME1 0x00436f10
+float Sexy::GetBaseMouseWheelMove() {
+	return ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1053,67", 0.1);
+}
