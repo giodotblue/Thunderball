@@ -13,15 +13,29 @@
 
 using namespace Sexy;
 
+// SYNTHETIC: POPCAPGAME1 0x0051a3c0
+// Sexy::ResourceManager::ImageRes::`scalar deleting destructor'
+
+// FUNCTION: POPCAPGAME1 0x0051a290
+// Sexy::ResourceManager::ImageRes::~ImageRes
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x004fc020
 void ResourceManager::ImageRes::DeleteResource()
 {	
 	mImage.Release();
 }
 
+// SYNTHETIC: POPCAPGAME1 0x00516c90
+// Sexy::ResourceManager::SoundRes::`scalar deleting destructor'
+
+// FUNCTION: POPCAPGAME1 0x00516bb0
+// Sexy::ResourceManager::SoundRes::~SoundRes
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x004fc030
 void ResourceManager::SoundRes::DeleteResource()
 {
 	if (mSoundId >= 0)
@@ -30,8 +44,15 @@ void ResourceManager::SoundRes::DeleteResource()
 	mSoundId = -1;
 }
 
+// SYNTHETIC: POPCAPGAME1 0x0051a460
+// Sexy::ResourceManager::FontRes::`scalar deleting destructor'
+
+// FUNCTION: POPCAPGAME1 0x0051a3f0
+// Sexy::ResourceManager::FontRes::~FontRes
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x004fc060
 void ResourceManager::FontRes::DeleteResource()
 {
 	delete mFont;
@@ -131,6 +152,7 @@ std::string ResourceManager::GetErrorText()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x004fc0a0
 bool ResourceManager::HadError()
 {
 	return mHasFailed;
@@ -216,6 +238,7 @@ bool ResourceManager::ParseCommonResource(XMLElement &theElement, BaseRes *theRe
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x0051a490
 bool ResourceManager::ParseSoundResource(XMLElement &theElement)
 {
 	SoundRes *aRes = new SoundRes;
@@ -407,6 +430,7 @@ bool ResourceManager::ParseImageResource(XMLElement &theElement)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x0051b560
 bool ResourceManager::ParseFontResource(XMLElement &theElement)
 {
 	FontRes *aRes = new FontRes;
@@ -468,6 +492,8 @@ bool ResourceManager::ParseFontResource(XMLElement &theElement)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+
+// FUNCTION: POPCAPGAME1 0x00509ea0
 bool ResourceManager::ParseSetDefaults(XMLElement &theElement)
 {
 	XMLParamMap::iterator anItr;
@@ -485,7 +511,7 @@ bool ResourceManager::ParseSetDefaults(XMLElement &theElement)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-// FUNCTION: POPCAPGAME1 0x00521a20
+// FUNCTION: POPCAPGAME1 0x00518680
 bool ResourceManager::ParseResources()
 {
 	for (;;)
@@ -611,6 +637,7 @@ bool ResourceManager::DoParseResources()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x00521a20
 bool ResourceManager::ParseResourcesFile(const std::string& theFilename)
 {
 	mXMLParser = new XMLParser();
@@ -833,6 +860,7 @@ void ResourceManager::DeleteImage(const std::string &theName)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x005038a0
 SharedImageRef ResourceManager::LoadImage(const std::string &theName)
 {
 	ResMap::iterator anItr = mImageMap.find(theName);
@@ -854,6 +882,7 @@ SharedImageRef ResourceManager::LoadImage(const std::string &theName)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x0050a490
 bool ResourceManager::DoLoadSound(SoundRes* theRes)
 {
 	SoundRes *aRes = theRes;
@@ -986,6 +1015,7 @@ void ResourceManager::DeleteFont(const std::string &theName)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x00501110
 bool ResourceManager::LoadNextResource()
 {
 	if (HadError())
@@ -1042,6 +1072,7 @@ void ResourceManager::ResourceLoadedHook(BaseRes *theRes)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x00521c30
 void ResourceManager::StartLoadResources(const std::string &theGroup)
 {
 	mError = "";
@@ -1105,6 +1136,7 @@ bool ResourceManager::LoadResources(const std::string &theGroup)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x00501220
 int	ResourceManager::GetNumResources(const std::string &theGroup, ResMap &theMap)
 {
 	if (theGroup.empty())
@@ -1123,6 +1155,7 @@ int	ResourceManager::GetNumResources(const std::string &theGroup, ResMap &theMap
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x005012d0
 int	ResourceManager::GetNumImages(const std::string &theGroup)
 {
 	return GetNumResources(theGroup, mImageMap);
@@ -1130,6 +1163,7 @@ int	ResourceManager::GetNumImages(const std::string &theGroup)
 	
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x005012f0
 int	ResourceManager::GetNumSounds(const std::string &theGroup)
 {
 	return GetNumResources(theGroup,mSoundMap);
@@ -1137,6 +1171,7 @@ int	ResourceManager::GetNumSounds(const std::string &theGroup)
 	
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x00501310
 int ResourceManager::GetNumFonts(const std::string &theGroup)
 {
 	return GetNumResources(theGroup, mFontMap);
@@ -1144,6 +1179,7 @@ int ResourceManager::GetNumFonts(const std::string &theGroup)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x00501330
 int	ResourceManager::GetNumResources(const std::string &theGroup)
 {
 	return GetNumImages(theGroup) + GetNumSounds(theGroup) + GetNumFonts(theGroup);
@@ -1173,6 +1209,7 @@ int	ResourceManager::GetSound(const std::string &theId)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x00503950
 Font* ResourceManager::GetFont(const std::string &theId)
 {
 	ResMap::iterator anItr = mFontMap.find(theId);
@@ -1184,6 +1221,7 @@ Font* ResourceManager::GetFont(const std::string &theId)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x0050a610
 SharedImageRef ResourceManager::GetImageThrow(const std::string &theId)
 {
 	ResMap::iterator anItr = mImageMap.find(theId);
@@ -1204,6 +1242,7 @@ SharedImageRef ResourceManager::GetImageThrow(const std::string &theId)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x0050a7c0
 int	ResourceManager::GetSoundThrow(const std::string &theId)
 {
 	ResMap::iterator anItr = mSoundMap.find(theId);
@@ -1224,6 +1263,7 @@ int	ResourceManager::GetSoundThrow(const std::string &theId)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x0050a8e0
 Font* ResourceManager::GetFontThrow(const std::string &theId)
 {
 	ResMap::iterator anItr = mFontMap.find(theId);
@@ -1250,6 +1290,7 @@ void ResourceManager::SetAllowMissingProgramImages(bool allow)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x005039c0
 bool ResourceManager::ReplaceImage(const std::string &theId, Image *theImage)
 {
 	ResMap::iterator anItr = mImageMap.find(theId);

@@ -123,6 +123,7 @@ DSoundManager::~DSoundManager()
 	}
 }
 
+// FUNCTION: POPCAPGAME1 0x0054b7c0
 int	DSoundManager::FindFreeChannel()
 {
 	DWORD aTick = GetTickCount();
@@ -148,6 +149,7 @@ int	DSoundManager::FindFreeChannel()
 	return -1;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a210
 bool DSoundManager::Initialized()
 {
 /*
@@ -160,6 +162,7 @@ bool DSoundManager::Initialized()
 	return (mDirectSound != NULL);
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a220
 int DSoundManager::VolumeToDB(double theVolume)
 {
 	int aVol = (int) ((log10(1 + theVolume*9) - 1.0) * 2333);
@@ -169,6 +172,7 @@ int DSoundManager::VolumeToDB(double theVolume)
 	return aVol;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054b840
 void DSoundManager::SetVolume(double theVolume)
 {
 	mMasterVolume = theVolume;
@@ -178,6 +182,7 @@ void DSoundManager::SetVolume(double theVolume)
 			mPlayingSounds[i]->RehupVolume();
 }
 
+// FUNCTION: POPCAPGAME1 0x0054e020
 bool DSoundManager::LoadWAVSound(unsigned int theSfxID, const std::string& theFilename)
 {		
 	int aDataSize;
@@ -323,6 +328,7 @@ bool DSoundManager::LoadWAVSound(unsigned int theSfxID, const std::string& theFi
 }
 
 // Load FMod sound can handle oggs and mp3s and whatever else fmod can decode
+// FUNCTION: POPCAPGAME1 0x0054bb30
 bool DSoundManager::LoadFModSound(unsigned int theSfxID, const std::string& theFilename)
 {
 	if (!mHaveFMod)
@@ -449,11 +455,13 @@ exit(0);
 
 #ifdef USE_OGG_LIB
 
+// FUNCTION: POPCAPGAME1 0x0054a260
 static int p_fseek64_wrap(PFILE *f,ogg_int64_t off,int whence){
 	if(f==NULL)return(-1);
 	return p_fseek(f,(long)off,whence);
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a290
 int ov_pak_open(PFILE *f,OggVorbis_File *vf,char *initial,long ibytes){
 	ov_callbacks callbacks = {
 		(size_t (*)(void *, size_t, size_t, void *))  p_fread,
@@ -465,6 +473,7 @@ int ov_pak_open(PFILE *f,OggVorbis_File *vf,char *initial,long ibytes){
 	return ov_open_callbacks((void *)f, vf, initial, ibytes, callbacks);
 }
 
+// FUNCTION: POPCAPGAME1 0x0054bd40
 bool DSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string& theFilename)
 {
 	OggVorbis_File vf;
@@ -546,7 +555,7 @@ bool DSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string& theFi
 }
 #endif
 
-
+// FUNCTION: POPCAPGAME1 0x0054bf10
 bool DSoundManager::LoadAUSound(unsigned int theSfxID, const std::string& theFilename)
 {
 	PFILE* fp;
@@ -706,6 +715,7 @@ bool DSoundManager::LoadAUSound(unsigned int theSfxID, const std::string& theFil
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054f080
 bool DSoundManager::LoadSound(unsigned int theSfxID, const std::string& theFilename)
 {
 	if ((theSfxID < 0) || (theSfxID >= MAX_SOURCE_SOUNDS))
@@ -767,6 +777,7 @@ bool DSoundManager::LoadSound(unsigned int theSfxID, const std::string& theFilen
 	return false;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054c810
 int DSoundManager::LoadSound(const std::string& theFilename)
 {
 	int i;
@@ -788,6 +799,7 @@ int DSoundManager::LoadSound(const std::string& theFilename)
 	return -1;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054e520
 void DSoundManager::ReleaseSound(unsigned int theSfxID)
 {
 	if (mSourceSounds[theSfxID] != NULL)
@@ -798,6 +810,7 @@ void DSoundManager::ReleaseSound(unsigned int theSfxID)
 	}
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a2e0
 int DSoundManager::GetFreeSoundId()
 {
 	for (int i=0; i<MAX_SOURCE_SOUNDS; i++)
@@ -809,6 +822,7 @@ int DSoundManager::GetFreeSoundId()
 	return -1;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a300
 int DSoundManager::GetNumSounds()
 {
 	int aCount = 0;
@@ -821,6 +835,7 @@ int DSoundManager::GetNumSounds()
 	return aCount;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a340
 bool DSoundManager::SetBaseVolume(unsigned int theSfxID, double theBaseVolume)
 {
 	if ((theSfxID < 0) || (theSfxID >= MAX_SOURCE_SOUNDS))
@@ -830,6 +845,7 @@ bool DSoundManager::SetBaseVolume(unsigned int theSfxID, double theBaseVolume)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a370
 bool DSoundManager::SetBasePan(unsigned int theSfxID, int theBasePan)
 {
 	if ((theSfxID < 0) || (theSfxID >= MAX_SOURCE_SOUNDS))
@@ -839,6 +855,7 @@ bool DSoundManager::SetBasePan(unsigned int theSfxID, int theBasePan)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054c330
 bool DSoundManager::GetTheFileTime(const std::string& theDepFile, FILETIME* theFileTime)
 {	
 	memset(theFileTime, 0, sizeof(FILETIME));
@@ -941,6 +958,7 @@ bool DSoundManager::WriteWAV(unsigned int theSfxID, const std::string& theFilena
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054c6c0
 SoundInstance* DSoundManager::GetSoundInstance(unsigned int theSfxID)
 {
 	if (theSfxID > MAX_SOURCE_SOUNDS)
@@ -968,6 +986,7 @@ SoundInstance* DSoundManager::GetSoundInstance(unsigned int theSfxID)
 	return mPlayingSounds[aFreeChannel];
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a3a0
 void DSoundManager::ReleaseSounds()
 {
 	for (int i = 0; i < MAX_SOURCE_SOUNDS; i++)
@@ -978,6 +997,7 @@ void DSoundManager::ReleaseSounds()
 		}
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a3d0
 void DSoundManager::ReleaseChannels()
 {
 	for (int i = 0; i < MAX_CHANNELS; i++)
@@ -988,6 +1008,7 @@ void DSoundManager::ReleaseChannels()
 		}
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a400
 void DSoundManager::ReleaseFreeChannels()
 {
 	for (int i = 0; i < MAX_CHANNELS; i++)
@@ -998,6 +1019,7 @@ void DSoundManager::ReleaseFreeChannels()
 		}
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a440
 void DSoundManager::StopAllSounds()
 {
 	for (int i = 0; i < MAX_CHANNELS; i++)
@@ -1010,6 +1032,7 @@ void DSoundManager::StopAllSounds()
 }
 
 
+// FUNCTION: POPCAPGAME1 0x0054a480
 double DSoundManager::GetMasterVolume()
 {
 	MIXERCONTROLDETAILS mcd;
@@ -1047,6 +1070,7 @@ double DSoundManager::GetMasterVolume()
 	return mxcd_u.dwValue / (double) 0xFFFF;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a5c0
 void DSoundManager::SetMasterVolume(double theVolume)
 {
 	MIXERCONTROLDETAILS mcd;
@@ -1083,10 +1107,12 @@ void DSoundManager::SetMasterVolume(double theVolume)
 	mixerClose(hmx);
 }
 
+// FUNCTION: POPCAPGAME1 0x0052a680
 void DSoundManager::Flush()
 {
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a730
 void DSoundManager::SetCooperativeWindow(HWND theHWnd, bool isWindowed)
 {
 	if (mDirectSound != NULL)

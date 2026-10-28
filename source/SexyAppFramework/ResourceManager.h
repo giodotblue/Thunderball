@@ -57,6 +57,7 @@ protected:
 		virtual void DeleteResource() { }
 	};
 
+	// VTABLE: POPCAPGAME1 0x00611440
 	struct ImageRes : public BaseRes
 	{
 		SharedImageRef mImage;
@@ -80,6 +81,7 @@ protected:
 		virtual void DeleteResource();
 	};
 
+	// VTABLE: POPCAPGAME1 0x0061144c
 	struct SoundRes : public BaseRes
 	{
 		int mSoundId;
@@ -90,6 +92,7 @@ protected:
 		virtual void DeleteResource();
 	};
 
+	// VTABLE: POPCAPGAME1 0x00611458
 	struct FontRes : public BaseRes
 	{
 		Font *mFont;

@@ -25,12 +25,14 @@ static std::string StringToUpper(const std::string& theString)
 	return aString;
 }
 
+// FUNCTION: POPCAPGAME1 0x0055acc0
 PakInterface::PakInterface()
 {
 	if (GetPakPtr() == NULL)
 		*gPakInterfaceP = this;
 }
 
+// FUNCTION: POPCAPGAME1 0x0055ac30
 PakInterface::~PakInterface()
 {
 }
@@ -218,6 +220,7 @@ static void FixFileName(const char* theFileName, char* theUpperName)
 	}
 }
 
+// FUNCTION: POPCAPGAME1 0x005597a0
 PFILE* PakInterface::FOpen(const char* theFileName, const char* anAccess)
 {
 	if ((stricmp(anAccess, "r") == 0) || (stricmp(anAccess, "rb") == 0) || (stricmp(anAccess, "rt") == 0))
@@ -280,6 +283,7 @@ int PakInterface::FTell(PFILE* theFile)
 		return ftell(theFile->mFP);	
 }
 
+// FUNCTION: POPCAPGAME1 0x00558e20
 size_t PakInterface::FRead(void* thePtr, int theElemSize, int theCount, PFILE* theFile)
 {
 	if (theFile->mRecord != NULL)
