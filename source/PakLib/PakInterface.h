@@ -151,6 +151,7 @@ static int p_fclose(PFILE* theFile)
 	return aResult;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a120
 static int p_fseek(PFILE* theFile, long theOffset, int theOrigin)
 {
 	if (GetPakPtr() != NULL)

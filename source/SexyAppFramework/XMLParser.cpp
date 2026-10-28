@@ -4,6 +4,12 @@
 
 using namespace Sexy;
 
+// FUNCTION: POPCAPGAME1 0x00517ce0
+// Sexy::XMLElement::XMLElement
+
+// FUNCTION: POPCAPGAME1 0x00516560
+// Sexy::XMLElement::~XMLElement
+
 // FUNCTION: POPCAPGAME1 0x0050f120
 XMLParser::XMLParser()
 {

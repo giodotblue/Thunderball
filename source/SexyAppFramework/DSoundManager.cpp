@@ -123,6 +123,7 @@ DSoundManager::~DSoundManager()
 	}
 }
 
+// FUNCTION: POPCAPGAME1 0x0054b7c0
 int	DSoundManager::FindFreeChannel()
 {
 	DWORD aTick = GetTickCount();
@@ -181,6 +182,7 @@ void DSoundManager::SetVolume(double theVolume)
 			mPlayingSounds[i]->RehupVolume();
 }
 
+// FUNCTION: POPCAPGAME1 0x0054e020
 bool DSoundManager::LoadWAVSound(unsigned int theSfxID, const std::string& theFilename)
 {		
 	int aDataSize;
@@ -326,6 +328,7 @@ bool DSoundManager::LoadWAVSound(unsigned int theSfxID, const std::string& theFi
 }
 
 // Load FMod sound can handle oggs and mp3s and whatever else fmod can decode
+// FUNCTION: POPCAPGAME1 0x0054bb30
 bool DSoundManager::LoadFModSound(unsigned int theSfxID, const std::string& theFilename)
 {
 	if (!mHaveFMod)
@@ -452,11 +455,13 @@ exit(0);
 
 #ifdef USE_OGG_LIB
 
+// FUNCTION: POPCAPGAME1 0x0054a260
 static int p_fseek64_wrap(PFILE *f,ogg_int64_t off,int whence){
 	if(f==NULL)return(-1);
 	return p_fseek(f,(long)off,whence);
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a290
 int ov_pak_open(PFILE *f,OggVorbis_File *vf,char *initial,long ibytes){
 	ov_callbacks callbacks = {
 		(size_t (*)(void *, size_t, size_t, void *))  p_fread,
@@ -468,6 +473,7 @@ int ov_pak_open(PFILE *f,OggVorbis_File *vf,char *initial,long ibytes){
 	return ov_open_callbacks((void *)f, vf, initial, ibytes, callbacks);
 }
 
+// FUNCTION: POPCAPGAME1 0x0054bd40
 bool DSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string& theFilename)
 {
 	OggVorbis_File vf;
@@ -549,7 +555,7 @@ bool DSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string& theFi
 }
 #endif
 
-
+// FUNCTION: POPCAPGAME1 0x0054bf10
 bool DSoundManager::LoadAUSound(unsigned int theSfxID, const std::string& theFilename)
 {
 	PFILE* fp;
@@ -849,6 +855,7 @@ bool DSoundManager::SetBasePan(unsigned int theSfxID, int theBasePan)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0054c330
 bool DSoundManager::GetTheFileTime(const std::string& theDepFile, FILETIME* theFileTime)
 {	
 	memset(theFileTime, 0, sizeof(FILETIME));
@@ -1001,6 +1008,7 @@ void DSoundManager::ReleaseChannels()
 		}
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a400
 void DSoundManager::ReleaseFreeChannels()
 {
 	for (int i = 0; i < MAX_CHANNELS; i++)
