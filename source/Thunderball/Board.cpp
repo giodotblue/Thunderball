@@ -11,6 +11,7 @@
 #include "DebugMgr.h"
 #include "EffectMgr.h"
 #include "EndLevelDialog.h"
+#include "FileDialog.h"
 #include "FloatingTextMgr.h"
 #include "GameStats.h"
 #include "Gun.h"
@@ -2051,7 +2052,19 @@ void Board::LoadLevel2(std::string& param_1)
 {
 	std::string aLevelName;
 	if (param_1.empty()) {
-		// TODO file dialog stuff
+		SexyFileDialog aFileDialog;
+		aFileDialog.SetRegKey("SOFTWARE\\" + GetThunderballApp()->mRegKey, "LevelFile", true);
+		aFileDialog.SetInitialDir("levels", true);
+		aFileDialog.AddFilter("*.dat", "*.dat");
+		aFileDialog.SetTitle("Load Level");
+		aFileDialog.SetNoChangeDir(true);
+		if (!aFileDialog.DoDialog(NULL)) {
+			return;
+		}
+		aLevelName = aFileDialog.GetFile();
+		if (aLevelName.find(".") == std::string::npos) {
+			aLevelName += ".dat";
+		}
 	}
 	else {
 		aLevelName = param_1;
