@@ -51,6 +51,7 @@ DSoundInstance::~DSoundInstance()
 		mSoundBuffer->Release();
 }
 
+// FUNCTION: POPCAPGAME1 0x0054a7c0
 void DSoundInstance::RehupVolume()
 {
 	if (mSoundBuffer != NULL)
