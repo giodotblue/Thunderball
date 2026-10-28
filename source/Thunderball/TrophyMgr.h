@@ -17,6 +17,8 @@ class OpponentInfo {};
 class TrophyInfo : public RefCount {
 public:
     int mId; // +0x8
+	std::string mUnk0xc; // +0xc
+	std::string mUnk0x44; // +0x44
     bool mUnk0x60; // +0x60
 	int mUnk0x64; // +0x64
 	int mUnk0x68; // +0x68
@@ -24,9 +26,7 @@ public:
     int mUnk0x70; // +0x70
     bool mUnk0x74; // +0x74
 	bool mUnk0x75; // +0x75
-    std::vector<std::string>* mUnk0x78; // +0x78
-    int mUnk0x7c; // +0x7c
-    int mUnk0x80; // +0x80
+    std::vector<std::string> mUnk0x78; // +0x78
     std::vector<OpponentInfo> mUnk0x88; // +0x88
 };
 

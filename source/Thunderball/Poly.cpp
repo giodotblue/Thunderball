@@ -1,9 +1,11 @@
 #include "Poly.h"
 
 #include "Board.h"
+#include "DataSync.h"
 #include "EffectMgr.h"
 #include "Line.h"
 #include "Mover.h"
+#include "PhysObj.h"
 #include "Res.h"
 #include "SoundMgr.h"
 #include "ThunderCommon.h"
@@ -754,13 +756,15 @@ void Poly::InitRotatedFromPoints(float param_1)
 		float fVar3 = fVar2 * aPoint0.y - fVar1 * aPoint0.x;
 		float fVar4 = fVar1 * aPoint0.y + fVar2 * aPoint0.x;
 
-		int i = 0;
-		for (std::vector<SexyVector2>::iterator it = mUnk0xe8.begin(); it != mUnk0xe8.end(); ++it, i++) {
-			SexyVector2& aPoint = *it;
+		int aLineCount = static_cast<int>(mUnk0xe8.size()) - 1;
+
+		for (int i = 0; i < aLineCount; ++i) {
+			SexyVector2& aPoint = mUnk0xe8[i];
 			float fVar5 = aPoint.x;
 			float fVar6 = aPoint.y;
 			float fVar7 = fVar1 * fVar5 + fVar2 * fVar6;
 			float fVar8 = fVar6 * fVar1 - fVar2 * fVar5;
+
 			Line* aLine = mUnk0x108[i];
 			aLine->Init(
 				fVar3 + mUnk0x114,
@@ -1191,7 +1195,104 @@ void Poly::InitFromRect(float param_1, float param_2, float param_3, float param
 	InitFromPoints();
 }
 
-// STUB: POPCAPGAME1 0x00487d00
+// TEMPLATE: POPCAPGAME1 0x004833a0
+// Sexy::DataSync_SyncSTLVectorImplSimple<std::vector<Sexy::SexyVector2,std::allocator<Sexy::SexyVector2> >,Sexy::DataSyncFunc_SyncSexyVector2>
+
+// TEMPLATE: POPCAPGAME1 0x00481950
+// Sexy::DataSync_SyncSTLVectorImpl<std::vector<Sexy::SexyVector2,std::allocator<Sexy::SexyVector2> >,Sexy::DataSyncFunc_SyncSexyVector2,Sexy::DataSyncFunc_AllocStack<Sexy::SexyVector2> >
+
+// FUNCTION: POPCAPGAME1 0x00487d00
 void Poly::SyncCommon(DataSync& theSync, bool param_2)
 {
+	PhysObj::SyncState(theSync);
+	if (theSync.mReader != NULL) {
+		InitDefaults();
+	}
+
+	bool bVar3 = mMover != NULL;
+	bool local_24 = mUnk0x134 != 1;
+	bool local_1e = (mUnk0x11c == 0.0f || bVar3) ? false : true;
+	bool local_1f = mUnk0x120 != 1;
+	bool local_21 = (mUnk0x124 == 1.0f || PhysObj::mSyncType != 1) ? false : true;
+	bool local_22 = mUnk0x138 != 0;
+	bool local_23 = mUnk0x13c != 0;
+	bool local_25 = mUnk0x140 != 0;
+
+	theSync.SyncBoolBit(mUnk0x12c);
+	theSync.SyncBoolBit(local_24);
+	theSync.SyncBoolBit(local_1e);
+	theSync.SyncBoolBit(local_1f);
+	theSync.SyncBoolBit(bVar3);
+	theSync.SyncBoolBit(local_21);
+	theSync.SyncBoolBit(mUnk0x12f);
+	theSync.SyncBoolBit(mUnk0x130);
+	theSync.EndBit();
+
+	if (34 < theSync.mVersion) {
+		theSync.SyncBoolBit(local_22);
+		theSync.SyncBoolBit(local_23);
+		theSync.SyncBoolBit(local_25);
+		theSync.SyncBoolBit(mUnk0x144);
+		theSync.EndBit();
+	}
+
+	if (local_1e) {
+		theSync.SyncFloat(mUnk0x11c);
+	}
+
+	if (local_1f) {
+		theSync.SyncFloat(mUnk0x120);
+	}
+
+	if (local_21) {
+		theSync.SyncFloat(mUnk0x124);
+	}
+	
+	if (local_24) {
+		theSync.SyncSByte(mUnk0x134);
+	}
+
+	if (bVar3) {
+		theSync.SyncFloat(mUnk0x114);
+		theSync.SyncFloat(mUnk0x118);
+	}
+
+	if (theSync.mReader != NULL && !bVar3) {
+		mUnk0x11c = mMover->mUnk0x64;
+		mUnk0x114 = mMover->mUnk0x54;
+		mUnk0x118 = mMover->mUnk0x58;
+	}
+
+	if (theSync.mReader != NULL) {
+		mUnk0x128 = mUnk0x11c;
+	}
+
+	if (param_2) {
+		DataSync_SyncSTLVectorImplSimple(theSync, mUnk0xe8, DataSyncFunc_SyncSexyVector2());
+		if (PhysObj::mSyncType == 3) {
+			if (theSync.mWriter != NULL) {
+				EnsureLines();
+			}
+			theSync.SyncFloat(mUnk0x14);
+			theSync.SyncFloat(mUnk0x1c);
+			theSync.SyncFloat(mUnk0x18);
+			theSync.SyncFloat(mUnk0x20);
+			DataSync_SyncSTLVectorImplSimple(theSync, mUnk0xf8, DataSyncFunc_SyncSexyVector2());
+			DataSync_SyncSTLVectorImplSimple(theSync, mUnk0x108, DataSyncFunc_SyncClassPtr<Line>());
+		} else if (theSync.mReader != NULL) {
+			InitFromPoints();
+		}
+	}
+
+	if (local_22) {
+		theSync.SyncByte(mUnk0x138);
+	}
+
+	if (local_23) {
+		theSync.SyncLong(mUnk0x13c);
+	}
+
+	if (local_25) {
+		theSync.SyncLong(mUnk0x140);
+	}
 }

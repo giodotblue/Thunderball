@@ -170,14 +170,14 @@ void PhysObj::SetActiveWithGrowAnim(bool param_1)
 // FUNCTION: POPCAPGAME1 0x0047af50
 void PhysObj::SetIsPeg(bool isPeg)
 {
-	if (!isPeg) {
-		if (mPegInfo != NULL) {
-			mPegInfo->CreateRef();
+	if (isPeg) {
+		if (mPegInfo == NULL) {
+			mPegInfo = new PegInfo();
+			PegChangedHook(true);
 		}
-		PegChangedHook(true);
 	}
 	else if (mPegInfo != NULL) {
-		mPegInfo = new PegInfo();
+		mPegInfo = NULL;
 		PegChangedHook(false);
 	}
 }
@@ -356,12 +356,12 @@ bool PhysObj::LoadImage()
 		ImageMgr* theImageMgr = GetImageMgr();
 
 		if (mUnk0x94.find('/') != -1) {
-			mUnk0xb4 = theImageMgr->GetImage(&mUnk0x94, &mUnk0x2f, true);
+			mUnk0xb4 = theImageMgr->GetImage(mUnk0x94, &mUnk0x2f, true);
 		}
 		else {
 			// STRING: POPCAPGAME1 0x005f1bfc
 			std::string path = "images/levels/" + mUnk0x94;
-			mUnk0xb4 = theImageMgr->GetImage(&path, &mUnk0x2f, true);
+			mUnk0xb4 = theImageMgr->GetImage(path, &mUnk0x2f, true);
 		}
 
 		ImageLib::gAlphaComposeColor = uVar1;

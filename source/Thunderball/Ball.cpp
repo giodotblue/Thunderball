@@ -133,7 +133,7 @@ void Ball::SyncState(DataSync& theSync)
     theSync.SyncBoolBit(mUnk0x161);
     theSync.EndBit();
 
-    if (local_10) {
+    if (!local_10) {
         if (mMover == NULL && theSync.mReader != NULL) {
             throw DataReaderException("");
         }
@@ -154,13 +154,13 @@ void Ball::SyncState(DataSync& theSync)
         theSync.SyncLong(mUnk0xe4);
         theSync.SyncFloat(mUnk0x10c[0].x);
         theSync.SyncFloat(mUnk0x10c[0].y);
-        if (0xb < theSync.mVersion) {
+        if (0xc <= theSync.mVersion) {
             for (int i = 0; i < 4; i++) {
                 theSync.SyncFloat(mUnk0x10c[i].x);
                 theSync.SyncFloat(mUnk0x10c[i].y);
             }
         }
-        if (0xc < theSync.mVersion) {
+        if (0xd <= theSync.mVersion) {
             theSync.SyncBoolBit(mUnk0x164);
             theSync.SyncBoolBit(mUnk0x165);
             theSync.SyncBoolBit(local_14);
@@ -172,11 +172,11 @@ void Ball::SyncState(DataSync& theSync)
             theSync.EndBit();
         }
 
-        if (0x17 < theSync.mVersion) {
+        if (0x18 <= theSync.mVersion) {
             theSync.SyncLong(mUnk0xe8);
         }
         bool local_17 = mUnk0x178 != 0;
-        if (0x1d < theSync.mVersion) {
+        if (0x1e <= theSync.mVersion) {
             theSync.SyncBoolBit(mUnk0x146);
             theSync.SyncBoolBit(mUnk0x18d);
             theSync.SyncBoolBit(mUnk0x18c);
@@ -470,7 +470,6 @@ void Ball::Draw(Graphics* g)
     g->SetColor(Color(mUnk0x44));
     DrawCircle(g, mUnk0xec, mUnk0xf0, mUnk0x13c - 1.0f, IMAGE_DEFOUTERPEG, NULL, 0);
     g->SetColorizeImages(false);
-
 }
 
 // FUNCTION: POPCAPGAME1 0x004838f0

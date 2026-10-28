@@ -63,7 +63,7 @@ public:
 	GameMode mGameMode;                // +0x760
 	int mUnk0x764;                     // +0x764
 	int mUnk0x768;                     // +0x768
-	char mPadding0x76c[0x4];            // +0x76c
+	int mUnk0x76c;                     // +0x76c
 	int mMaxStage;                     // +0x770
 	int mMaxLevel;                     // +0x774
 	char mPadding0x778;                 // +0x778

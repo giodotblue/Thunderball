@@ -10,7 +10,7 @@ using namespace Sexy;
 
 // FUNCTION: POPCAPGAME1 0x004bbe20
 DataReader::DataReader()
-	: mFileHandle(NULL), mMemoryHandle(NULL), mMemoryLength(0), mMemoryPosition(0), mDeallocate(false)
+	: mFileHandle(NULL), mMemoryHandle(NULL), mMemoryPosition(0), mMemoryLength(0), mUnk0x14(0), mDeallocate(false), mUnk0x19(0), mUnk0x1c(0)
 {
 }
 
@@ -58,25 +58,33 @@ void DataReader::Close()
 	mMemoryLength = 0;
 	mMemoryPosition = 0;
 	mDeallocate = false;
+	mUnk0x19 = 0;
+	mUnk0x1c = 0;
 }
 
 // FUNCTION: POPCAPGAME1 0x004bbf70
 void DataReader::ReadBytes(void* theBuffer, ulong theLength)
 {
-	if (mMemoryHandle) {
-		mMemoryPosition += theLength;
-		if (mMemoryPosition <= mMemoryLength) {
-			memcpy(theBuffer, mMemoryHandle, theLength);
-			mMemoryHandle = (char*) mMemoryHandle + theLength;
-			return;
-		}
-	}
+    mUnk0x1c = 0;
+    
+    if (mMemoryHandle != NULL) {
+        mUnk0x14 += theLength;
+        
+        if (mUnk0x14 > mMemoryLength) {
+            throw DataReaderException("");
+        }
 
-	if (mFileHandle && theLength == fread(theBuffer, 1, theLength, mFileHandle)) {
-		return;
-	}
+        memcpy(theBuffer, mMemoryHandle, theLength);
+        mMemoryHandle = (void*)((char*)mMemoryHandle + theLength);
 
-	throw DataReaderException("");
+    } else {
+        if (mFileHandle == NULL) {
+            throw DataReaderException("");
+        }
+        if (fread(theBuffer, 1, theLength, mFileHandle) != theLength) {
+            throw DataReaderException("");
+        }
+    }
 }
 
 // FUNCTION: POPCAPGAME1 0x004bc190
@@ -90,7 +98,7 @@ ulong DataReader::ReadLong()
 // FUNCTION: POPCAPGAME1 0x004bc1b0
 ushort DataReader::ReadShort()
 {
-	ushort result = 0;
+	ushort result;
 	ReadBytes(&result, sizeof(result));
 	return result;
 }
@@ -120,24 +128,26 @@ float DataReader::ReadFloat()
 // FUNCTION: POPCAPGAME1 0x004bc220
 void DataReader::ReadString(std::string& theString)
 {
-	ulong length = ReadShort();
-	theString.resize(length, 0);
-	ReadBytes(&theString[0], length);
+    ushort length = ReadShort();
+    theString.resize(length, '\0');
+    ReadBytes(&theString[0], length);
 }
 
 // FUNCTION: POPCAPGAME1 0x004bc290
 bool DataReader::ReadBit()
 {
-	if (mUnk0x1c == 0) {
-		mUnk0x1c = ReadByte();
-	}
+    if (mUnk0x1c == 0) {
+        mUnk0x19 = ReadByte();
+    }
 
-	int iVar2 = 1 >> (mUnk0x1c & 0x1f);
-	mUnk0x1c++;
-	if (7 < mUnk0x1c) {
-		mUnk0x1c = 0;
-	}
-	return bool(iVar2);
+    bool theBit = (mUnk0x19 & (1 << mUnk0x1c)) != 0;
+
+    mUnk0x1c++;
+    if (mUnk0x1c >= 8) {
+        mUnk0x1c = 0;
+    }
+
+    return theBit;
 }
 
 // FUNCTION: POPCAPGAME1 0x004bbeb0
@@ -515,7 +525,7 @@ void DataSync::SyncString(std::string& theValue)
 void DataSync::SyncBoolBit(bool& theValue)
 {
 	if (mReader) {
-		mReader->ReadBit();
+		theValue = mReader->ReadBit();
 	}
 	else {
 		mWriter->WriteBit(theValue);

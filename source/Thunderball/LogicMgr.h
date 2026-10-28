@@ -74,7 +74,7 @@ public:
 	int mUnk0x60[2];                        // +0x60
 	bool mUnk0x68;                          // +0x68
 	bool mUnk0x69;                          // +0x69
-	char mUnk0x6a[6];                       // +0x6a
+	float mUnk0x6c;                         // +0x6c
 	float mUnk0x70;                         // +0x70
 	int mUnk0x74[2];                        // +0x74
 	std::string mUnk0x80;                   // +0x80
@@ -276,7 +276,7 @@ public:
 	void RecordStats();
 	void DoLevelDone();
 	bool BeatLevel();
-	void ClearedLevel();
+	bool ClearedLevel();
 	void NotifySpookyCollision(PhysObj* param_1, PhysObj* param_2);
 	void FinishInitLevelText();
 	void CheckDoCharacterDialog();

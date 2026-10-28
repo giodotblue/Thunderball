@@ -2,21 +2,27 @@
 
 #include "Board.h"
 #include "CharacterMgr.h"
+#include "ConstEnums.h"
 #include "EndLevelDialog.h"
 #include "HighScoreMgr.h"
 #include "LogicMgr.h"
 #include "PlayerInfo.h"
 #include "Res.h"
+#include "SexyAppFramework/Common.h"
 #include "SoundMgr.h"
-#include "ThunderballApp.h"
 #include "ThunderButton.h"
+#include "Thunderball/Res.h"
+#include "ThunderballApp.h"
+#include "TrophyMgr.h"
 
 #include <SexyAppFramework/Font.h>
 #include <SexyAppFramework/Graphics.h>
 #include <SexyAppFramework/MemoryImage.h>
-
+#include <SexyAppFramework/SexyMatrix.h>
 #include <algorithm>
 #include <cstring>
+#include <string>
+
 
 using namespace Sexy;
 
@@ -124,8 +130,8 @@ void InterfaceMgr::DrawScore(Graphics* theGraphics, std::string* theText, bool i
 	// STRING: POPCAPGAME1 0x005dc7a8
 	// STRING: POPCAPGAME1 0x005dc760
 	int aRight = isLeftSide
-		? ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp953,542", 295)
-		: ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp954,542", 670);
+					 ? ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp953,542", 295)
+					 : ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp954,542", 670);
 	// STRING: POPCAPGAME1 0x005dc718
 	if (aTextWidth > ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp955,543", 100)) {
 		// STRING: POPCAPGAME1 0x005dc6d0
@@ -143,8 +149,8 @@ void InterfaceMgr::DrawSmallMode(Graphics* theGraphics, std::string* theText, bo
 	// STRING: POPCAPGAME1 0x005dc910
 	// STRING: POPCAPGAME1 0x005dc8c8
 	int anX = isLeftSide
-		? ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp958,568", 128)
-		: ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp959,568", 508);
+				  ? ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp958,568", 128)
+				  : ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp959,568", 508);
 	int aTextWidth = theGraphics->GetFont()->StringWidth(*theText);
 	// STRING: POPCAPGAME1 0x005dc880
 	if (aTextWidth > ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp960,569", 75)) {
@@ -158,7 +164,7 @@ void InterfaceMgr::DrawSmallMode(Graphics* theGraphics, std::string* theText, bo
 // FUNCTION: POPCAPGAME1 0x0043ca00
 void InterfaceMgr::DrawMode(Graphics* param_1, std::string* param_2, bool param_3)
 {
-    DrawSmallMode(param_1, param_2, param_3);
+	DrawSmallMode(param_1, param_2, param_3);
 }
 
 // FUNCTION: POPCAPGAME1 0x00436a10
@@ -169,8 +175,8 @@ void InterfaceMgr::DrawDetail(Graphics* theGraphics, std::string* theText, bool 
 	// STRING: POPCAPGAME1 0x005dca78
 	// STRING: POPCAPGAME1 0x005dca30
 	int anX = isLeftSide
-		? ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp963,581", 128)
-		: ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp964,581", 508);
+				  ? ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp963,581", 128)
+				  : ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp964,581", 508);
 	int aTextWidth = theGraphics->GetFont()->StringWidth(*theText);
 	// STRING: POPCAPGAME1 0x005dc9e8
 	if (aTextWidth > ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp965,582", 75)) {
@@ -192,7 +198,8 @@ void InterfaceMgr::DrawScoreBlink(Graphics* theGraphics)
 		theGraphics->DrawImage(
 			IMAGE_INT_SCOREHILIGHT,
 			ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp969,615", 113),
-			ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp970,615", 2));
+			ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp970,615", 2)
+		);
 	}
 	if (mUnk0xe4 > 0 && (mUnk0xe4 / aBlinkRate) % 2 == 0) {
 		// STRING: POPCAPGAME1 0x005dcb08
@@ -200,7 +207,8 @@ void InterfaceMgr::DrawScoreBlink(Graphics* theGraphics)
 		theGraphics->DrawImage(
 			IMAGE_INT_SCOREHILIGHT,
 			ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp971,618", 492),
-			ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp972,618", 2));
+			ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp972,618", 2)
+		);
 	}
 }
 
@@ -248,15 +256,18 @@ void InterfaceMgr::UpdateShotMeter()
 			mUnk0x48 = 125000;
 			mUnk0x4c = 125000;
 			mUnk0x161 = true;
-		} else if (aLogicMgr->mUnk0x108 >= 75000 && mUnk0x48 < 75000) {
+		}
+		else if (aLogicMgr->mUnk0x108 >= 75000 && mUnk0x48 < 75000) {
 			mUnk0x48 = 75000;
 			mUnk0x4c = 75000;
 			mUnk0x161 = true;
-		} else if (aLogicMgr->mUnk0x108 >= 25000 && mUnk0x48 < 25000) {
+		}
+		else if (aLogicMgr->mUnk0x108 >= 25000 && mUnk0x48 < 25000) {
 			mUnk0x48 = 25000;
 			mUnk0x4c = 25000;
 			mUnk0x161 = true;
-		} else {
+		}
+		else {
 			mUnk0x4c = aLogicMgr->mUnk0x108;
 		}
 
@@ -285,20 +296,25 @@ void InterfaceMgr::UpdateShotMeter()
 		int aDifference = mUnk0x4c - aMeterValue;
 		if (aDifference > 100000) {
 			aMeterValue += 5000;
-		} else if (aDifference > 25000) {
+		}
+		else if (aDifference > 25000) {
 			aMeterValue += 1000;
-		} else if (aDifference > 1000) {
+		}
+		else if (aDifference > 1000) {
 			aMeterValue += 200;
-		} else if (aDifference > 100) {
+		}
+		else if (aDifference > 100) {
 			aMeterValue += 100;
-		} else {
+		}
+		else {
 			aMeterValue += 10;
 		}
 		mUnk0x48 = aMeterValue;
 		if (mUnk0x48 > mUnk0x4c) {
 			mUnk0x48 = mUnk0x4c;
 		}
-	} else if (aMeterValue > mUnk0x4c) {
+	}
+	else if (aMeterValue > mUnk0x4c) {
 		int aDifference = aMeterValue - mUnk0x4c;
 		if (aDifference > 100000) {
 			aMeterValue -= 5000;
@@ -306,7 +322,8 @@ void InterfaceMgr::UpdateShotMeter()
 		}
 		if (aDifference > 25000) {
 			mUnk0x48 -= 1000;
-		} else {
+		}
+		else {
 			mUnk0x48 -= 200;
 		}
 		if (mUnk0x48 < mUnk0x4c) {
@@ -319,7 +336,8 @@ void InterfaceMgr::UpdateShotMeter()
 			mUnk0x50 = 0;
 		}
 		mUnk0x161 = false;
-	} else if (mUnk0x48 >= 25000) {
+	}
+	else if (mUnk0x48 >= 25000) {
 		mUnk0x161 = true;
 	}
 }
@@ -417,17 +435,22 @@ void InterfaceMgr::UpdateScoreDisp()
 		if (aDisplayedScore < aScore) {
 			if (aLogicMgr->mUnk0x4 == 5) {
 				aDisplayedScore += 5000;
-			} else {
+			}
+			else {
 				int aDifference = aScore - aDisplayedScore;
 				if (aDifference > 100000) {
 					aDisplayedScore += 5000;
-				} else if (aDifference > 10000) {
+				}
+				else if (aDifference > 10000) {
 					aDisplayedScore += 1000;
-				} else if (aDifference > 1000) {
+				}
+				else if (aDifference > 1000) {
 					aDisplayedScore += 200;
-				} else if (aDifference > 100) {
+				}
+				else if (aDifference > 100) {
 					aDisplayedScore += 100;
-				} else {
+				}
+				else {
 					aDisplayedScore += 10;
 				}
 			}
@@ -435,18 +458,22 @@ void InterfaceMgr::UpdateScoreDisp()
 			if (aDisplayedScore > aScore) {
 				aDisplayedScore = aScore;
 			}
-		} else if (aDisplayedScore > aScore) {
+		}
+		else if (aDisplayedScore > aScore) {
 			int aDifference = aDisplayedScore - aScore;
 			if (aDifference > 100000) {
 				aDisplayedScore -= 5000;
 			}
 			if (aDifference > 10000) {
 				aDisplayedScore -= 1000;
-			} else if (aDifference > 1000) {
+			}
+			else if (aDifference > 1000) {
 				aDisplayedScore -= 200;
-			} else if (aDifference > 100) {
+			}
+			else if (aDifference > 100) {
 				aDisplayedScore -= 100;
-			} else {
+			}
+			else {
 				aDisplayedScore -= 10;
 			}
 
@@ -479,7 +506,8 @@ void InterfaceMgr::DrawImageToInterface(Image* theImage, int theX, int theY, int
 	Rect aSrcRect;
 	if (theCel >= 0) {
 		aSrcRect = theImage->GetCelRect(theCel);
-	} else {
+	}
+	else {
 		aSrcRect = Rect(0, 0, theImage->mWidth, theImage->mHeight);
 	}
 
@@ -528,7 +556,8 @@ void InterfaceMgr::UpdateHighScore(bool param_1)
 	PlayerInfo* aProfile = mBoard->mApp->mCurProfile;
 	if (aProfile != NULL) {
 		mUnk0x68 = aProfile->mUnk0x204;
-	} else {
+	}
+	else {
 		mUnk0x68 = 0;
 	}
 	mUnk0x64 = 0;
@@ -568,7 +597,7 @@ int InterfaceMgr::GetNumVisibleBalls()
 {
 	int aMaxVisibleBalls = GetMaxVisibleBalls();
 	int aNumBalls = (int) mUnk0x164.size();
-	return (std::min)(aMaxVisibleBalls, aNumBalls);
+	return (std::min) (aMaxVisibleBalls, aNumBalls);
 }
 
 // FUNCTION: POPCAPGAME1 0x0043d310
@@ -581,7 +610,8 @@ void InterfaceMgr::DrawBalls(Graphics* theGraphics)
 	theGraphics->DrawImage(
 		IMAGE_INT_BALLBACK,
 		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1018,1103", -2) + aBallX,
-		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1019,1103", 17) + GetBallBottom());
+		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1019,1103", 17) + GetBallBottom()
+	);
 
 	int aNumVisibleBalls = GetNumVisibleBalls();
 	for (int i = 0; i < aNumVisibleBalls; ++i) {
@@ -593,7 +623,8 @@ void InterfaceMgr::DrawBalls(Graphics* theGraphics)
 	theGraphics->DrawImage(
 		IMAGE_INT_BALLGLASS,
 		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1020,1110", 3),
-		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1021,1110", 92));
+		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1021,1110", 92)
+	);
 }
 
 // STUB: POPCAPGAME1 0x00443cf0
@@ -733,14 +764,16 @@ void InterfaceMgr::Update()
 		if (aTarget > aShotMeter) {
 			if (mUnk0x38 == -1) {
 				mUnk0x38 = aShotMeter;
-			} else {
+			}
+			else {
 				mUnk0x38++;
 			}
 			if (mUnk0x38 >= aTarget) {
 				mUnk0x3c = -30;
 				mUnk0x38 = aShotMeter;
 			}
-		} else {
+		}
+		else {
 			mUnk0x38 = -1;
 		}
 	}
@@ -750,12 +783,14 @@ void InterfaceMgr::Update()
 		if (aReplayBlink < 10) {
 			mUnk0xf0 = aReplayBlink + 1;
 		}
-	} else {
+	}
+	else {
 		if (aReplayBlink > 0 && --mUnk0xf0 == 0) {
 			int aBlinkCount;
 			if (mBoard->mLogicMgr->mUnk0xf6) {
 				aBlinkCount = 8;
-			} else {
+			}
+			else {
 				aBlinkCount = 1;
 			}
 			mBoard->mReplayButton->Blink(aBlinkCount, false);
@@ -774,7 +809,8 @@ void InterfaceMgr::Update()
 			if (aBlinkIndex == i % 6) {
 				// STRING: POPCAPGAME1 0x005e6f68
 				mUnk0xfc[i] = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1052,1934", 20);
-			} else if (mUnk0xfc[i] > 0) {
+			}
+			else if (mUnk0xfc[i] > 0) {
 				mUnk0xfc[i]--;
 			}
 		}
@@ -792,7 +828,7 @@ void InterfaceMgr::AddTopBalls(int theNumBalls)
 	int aSoundOffset =
 		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp951,449", 20) +
 		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp950,449", 4) *
-		(ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp949,449", 9) + theNumBalls - aCurrentNumBalls);
+			(ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp949,449", 9) + theNumBalls - aCurrentNumBalls);
 	if (aSoundOffset >= 0 && theNumBalls <= 2) {
 		mBoard->mSoundMgr->AddSound(SOUND_ADD_BALL, 0.0f, 0, aSoundOffset, 1, -1.0f);
 	}
@@ -834,7 +870,8 @@ void InterfaceMgr::DrawBallsLeftDetail(Graphics* theGraphics, int theNumBalls, b
 				theGraphics,
 				aBoard->mApp->mCharacterMgr->GetCharacterName((aLogicMgr->mUnk0x184)[aPlayer]),
 				isLeftSide,
-				0);
+				0
+			);
 			return;
 		}
 	}
@@ -851,19 +888,102 @@ void InterfaceMgr::DrawBallsLeftDetail(Graphics* theGraphics, int theNumBalls, b
 	DrawDetail(theGraphics, &StrFormat("Balls %d", theNumBalls), isLeftSide, 0);
 }
 
-// STUB: POPCAPGAME1 0x004474b0
+// FUNCTION: POPCAPGAME1 0x004474b0
 void InterfaceMgr::DrawOnePlayer(Graphics* param_1)
 {
+	DrawScoreBlink(param_1);
+	if (mBoard->mUnk0xb4 == QUICK_PLAY) {
+		std::string aStr = "Quick";
+		DrawMode(param_1, &aStr, true);
+	}
+	else if (mBoard->mUnk0xb4 == UNKNOWN_0) {
+		std::string aStr = "Dev";
+		DrawMode(param_1, &aStr, true);
+	}
+	else if (mBoard->mUnk0xb4 != DEMO) {
+		std::string aStr = "Score";
+		DrawMode(param_1, &aStr, true);
+	}
+
+	std::string aStr1 = "Score";
+	DrawDetail(param_1, &aStr1, true, 0);
+
+	std::string aStr2 = "Top Score";
+	DrawMode(param_1, &aStr2, false);
+
+	if (0 < mUnk0x64) {
+		DrawDetail(param_1, &mUnk0x70, false, 0);
+	}
+
+	std::string aScoreStr = CommaSeperate(mUnk0x94);
+	DrawScore(param_1, &aScoreStr, true);
+
+	if (0 < mUnk0x64) {
+		std::string aHighScoreStr = CommaSeperate(mUnk0x64);
+		DrawScore(param_1, &aHighScoreStr, false);
+	}
 }
 
-// STUB: POPCAPGAME1 0x004476f0
+// FUNCTION: POPCAPGAME1 0x004476f0
 void InterfaceMgr::DrawStageMode(Graphics* param_1)
 {
+	param_1->SetColor(Color(ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp973,654", 0xffff)));
+	std::string aStr = "Stage";
+	DrawMode(param_1, &aStr, true);
+
+	std::string aStageStr = StrFormat("%d-%d", mUnk0x8c, mUnk0x90);
+	DrawDetail(param_1, &aStageStr, true, ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp974,657", 0xc));
+
+	std::string aScoreStr = CommaSeperate(mUnk0x94);
+	DrawScore(param_1, &aScoreStr, true);
+
+	if (0 < mUnk0x68) {
+		std::string aStr = "Total";
+		DrawDetail(param_1, &aStr, false, 0);
+
+		std::string aTotalStr = CommaSeperate(mUnk0x68);
+		DrawScore(param_1, &aTotalStr, false);
+	}
 }
 
-// STUB: POPCAPGAME1 0x00447920
+// FUNCTION: POPCAPGAME1 0x00447920
 void InterfaceMgr::DrawTrophyMode(Graphics* param_1)
 {
+	DrawScoreBlink(param_1);
+	param_1->SetColor(Color(ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp975,676", 0xffff)));
+	std::string aStr = "Score";
+	DrawDetail(param_1, &aStr, true, 0);
+
+	std::string aChallengeStr;
+	if (mBoard->mUnk0x128 != NULL) {
+		if (!mBoard->mUnk0x128->mUnk0x78.empty()) {
+			aChallengeStr = StrFormat("Chal. %d/%d", mBoard->mUnk0xf0 + 1, mBoard->mUnk0x128->mUnk0x78.size());
+		}
+		else {
+			aChallengeStr = "Challenge";
+		}
+	}
+
+	DrawSmallMode(param_1, &aChallengeStr, true);
+
+	if (mBoard->mUnk0x128->mUnk0x6c < 2) {
+		DrawMode(param_1, &mBoard->mUnk0x128->mUnk0xc, false);
+		DrawDetail(param_1, &mBoard->mUnk0x128->mUnk0x44, false, 0);
+	}
+	else {
+		std::string aLivesStr;
+		if (mBoard->mUnk0xdc) {
+			aLivesStr = StrFormat("Lives: %d", mBoard->mUnk0xdc);
+		}
+		else {
+			aLivesStr = "Last Life";
+		}
+
+		DrawMode(param_1, &aLivesStr, !mBoard->mUnk0xdc);
+	}
+
+	std::string aScoreStr = CommaSeperate(mUnk0x94);
+	DrawScore(param_1, &aScoreStr, true);
 }
 
 // STUB: POPCAPGAME1 0x00447b90
@@ -871,12 +991,190 @@ void InterfaceMgr::DrawTwoPlayer(Graphics* param_1)
 {
 }
 
-// STUB: POPCAPGAME1 0x00447f60
-void InterfaceMgr::DrawBack(Graphics* param_1)
+// FUNCTION: POPCAPGAME1 0x00436bd0
+void DrawButtonImage(Graphics* param_1, ThunderButton* param_2, bool param_3)
 {
+	param_1->Translate(param_2->mX, param_2->mY);
+	param_2->mUnk0x148 = true;
+	if (param_3) {
+		bool temp = param_2->mIsOver;
+		param_2->mIsOver = true;
+		param_2->mOverAlpha = 0;
+		param_2->Draw(param_1);
+		param_2->mIsOver = temp;
+	}
+	else {
+		param_2->Draw(param_1);
+	}
+
+	param_2->mUnk0x148 = false;
+	param_1->Translate(-param_2->mX, -param_2->mY);
 }
 
-// STUB: POPCAPGAME1 0x004417b0
+// FUNCTION: POPCAPGAME1 0x00447f60
+void InterfaceMgr::DrawBack(Graphics* param_1)
+{
+	LogicMgr* aLogicMgr = mBoard->mLogicMgr;
+	param_1->DrawImage(
+		IMAGE_INT_BALLBACK,
+		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1022,1152", 0x18),
+		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1023,1152", 0xb4)
+	);
+
+	DrawBalls(param_1);
+	param_1->DrawImage(mImages[2], mImages[0]->mWidth, 0);
+	param_1->DrawImage(mImages[3], 345, mImages[2]->mHeight);
+	param_1->DrawImage(mImages[0], 0, 0);
+	param_1->DrawImage(mImages[1], 800 - mImages[1]->mWidth, 0);
+	param_1->DrawImage(mImages[4], mImages[0]->mWidth, 586);
+
+	DrawButtonImage(param_1, mBoard->mMenuButton, false);
+	DrawButtonImage(param_1, mBoard->mReplayButton, false);
+
+	Image* anImage = IMAGE_INT_BUTTONCOVER;
+	if (0 < mUnk0xf0) {
+		int iVar2 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1024,1167", 735);
+		int local_8 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1025,1167", 538);
+		float fVar1 = mUnk0xf0;
+		if (mUnk0xf0 < 10) {
+			fVar1 /= 10.0f;
+
+			Rect aRect1(0, 0, (int) (anImage->mWidth / 2.0f * fVar1), anImage->mHeight);
+			int aWidth = (anImage->mWidth - anImage->mWidth / 2.0f) * fVar1;
+			Rect aRect2(anImage->mWidth - aWidth, 0, aWidth, anImage->mHeight);
+
+			param_1->DrawImage(anImage, iVar2, local_8, aRect1);
+			param_1->DrawImage(anImage, anImage->mWidth - aWidth + iVar2, local_8, aRect2);
+		}
+		else {
+			param_1->DrawImage(anImage, iVar2, local_8);
+		}
+	}
+
+	DrawFeverLights(param_1);
+	if (aLogicMgr->mUnk0x124) {
+		DrawTwoPlayer(param_1);
+	}
+	else if (mBoard->mUnk0xb4 == ADVENTURE) {
+		DrawStageMode(param_1);
+	}
+	else if (mBoard->mUnk0xb4 == CHALLENGE) {
+		DrawTrophyMode(param_1);
+	}
+	else {
+		DrawOnePlayer(param_1);
+	}
+}
+
+// FUNCTION: POPCAPGAME1 0x004417b0
 void InterfaceMgr::DrawFront(Graphics* param_1)
 {
+	DrawShotMeter(param_1);
+
+	param_1->SetDrawMode(Graphics::DRAWMODE_NORMAL);
+	param_1->SetColorizeImages(false);
+
+	param_1->SetColor(Color(ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1026,1210", 0xffff00)));
+	param_1->SetColor(Color(ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1027,1213", 0xffffff)));
+
+	if ((mUnk0x6c == 0) || (((mUnk0x6c / ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1028,1215", 0x1e)) % 2) == 0)) {
+		if (mUnk0x54 < 1) {
+			param_1->SetFont(FONT_BALLSLEFT);
+
+			std::string aBallsLeftStr = StrFormat("%d", mBoard->mLogicMgr->mUnk0x17c[mBoard->mLogicMgr->mUnk0x128]);
+
+			int aWidth = param_1->GetFont()->StringWidth(aBallsLeftStr);
+			param_1->DrawString(
+				aBallsLeftStr,
+				ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1029,1223", 0x27) - aWidth / 2,
+				ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1030,1223", 0x8c)
+			);
+		}
+	}
+
+	if (mUnk0x54 == 0) {
+		return;
+	}
+
+	int iVar1 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1031,1259", 0xf);
+	int uVar5 = mUnk0x54 / iVar1;
+	int iVar2 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1032,1261", 4);
+	float fVar1 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1033,1262", 5);
+	int iVar3 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1034,1266", 1);
+
+	Image* anImage = ((uVar5 / iVar2) % 2 == iVar3) ? IMAGE_INT_FBPOINTS : IMAGE_INT_FBFREEBALL;
+
+	int aColorHex;
+	int iVar4;
+	if (mUnk0x50 < 75000) {
+		aColorHex = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1035,1274", 0x88ff88);
+		iVar4 = 0;
+	}
+	else if (mUnk0x50 < 125000) {
+		aColorHex = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1036,1279", 0xff44ff);
+		iVar4 = 1;
+	}
+	else {
+		aColorHex = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1037,1284", 0xffff44);
+		iVar4 = 2;
+	}
+
+	float fVar2 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1038,1289", 0x3c);
+	float fVar3 = uVar5 - fVar1 * iVar2;
+
+	if (fVar3 < 0) {
+		iVar2 = uVar5 % 2;
+	}
+	else {
+		fVar3 = mUnk0x54 - fVar1 * iVar2 * iVar1;
+		anImage = IMAGE_INT_FBFREEBALL;
+		iVar2 = 1;
+	}
+
+	if (mBoard->mLogicMgr->mUnk0x124) {
+		anImage = IMAGE_INT_FBPOINTS;
+	}
+
+	Transform aTransform;
+	int theX = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1039,1304", 0x27);
+	int theY = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1040,1305", 0x7d);
+
+	int anAlpha = 0xff;
+	if (mUnk0x54 < 10) {
+		param_1->SetColorizeImages(true);
+		int iVar5 = (mUnk0x54 * 0xff) / 10;
+		param_1->SetColor(Color(0xffffff, iVar5));
+	}
+	else if (fVar2 < fVar3) {
+		anAlpha = ((int) (fVar2 - fVar3) * 0xff) / ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1041,1315", 0x14) + 0xff;
+		if (anAlpha < 0) {
+			return;
+		}
+		param_1->SetColorizeImages(true);
+		param_1->SetColor(Color(0xffffff, anAlpha));
+	}
+
+	Rect aRect1 = IMAGE_INT_FBLIGHTUP->GetCelRect(iVar4);
+	param_1->DrawImageTransform(IMAGE_INT_FBLIGHTUP, aTransform, aRect1, theX, theY);
+
+	Rect aRect2 = anImage->GetCelRect(iVar2, iVar4);
+	param_1->DrawImageTransform(anImage, aTransform, aRect2, theX, theY);
+
+	param_1->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
+	param_1->SetColorizeImages(true);
+
+	int iVar6 = (iVar2 == 0)
+						  ? ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1042,1335", 0x80)
+						  : ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1043,1337", 0xff);
+
+	param_1->SetColor(Color(aColorHex, (iVar6 * ((anAlpha * anAlpha) / 0xff)) / 0xff));
+
+	param_1->DrawImage(
+		IMAGE_INT_FBGLOW,
+		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1044,1342", 0),
+		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\InterfaceMgr.cpp1045,1342", 0x14)
+	);
+
+	param_1->SetDrawMode(Graphics::DRAWMODE_NORMAL);
+	param_1->SetColorizeImages(false);
 }

@@ -22,7 +22,10 @@ enum PowerupType {
 	POWERUP_10 = 10
 };
 
-enum StyleShot;
+enum StyleShot {
+	STYLESHOT_19 = 19
+};
+
 enum LogicState {
 	LOGICSTATE_0 = 0,
 	LOGICSTATE_5 = 5,

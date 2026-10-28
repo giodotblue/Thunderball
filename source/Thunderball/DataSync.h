@@ -3,11 +3,16 @@
 
 #include <SexyAppFramework/Common.h>
 #include <SexyAppFramework/SmartPtr.h>
+#include <SexyAppFramework/SexyVector.h>
+
 #include <list>
 #include <map>
 #include <set>
 #include <string>
 #include <vector>
+
+// FUNCTION: POPCAPGAME1 0x00636234
+// __TI2?AUDataReaderException@Sexy@@
 
 namespace Sexy
 {
@@ -18,7 +23,7 @@ namespace Sexy
 // VTABLE: POPCAPGAME1 0x005d5f34
 struct DataReaderException : public std::exception {
 	std::string what;
-	// FUNCTION: POPCAPGAME1 0x00422a20
+	// FUNCTION: POPCAPGAME1 0x0040d760
 	DataReaderException(const std::string& theWhat) : what(theWhat) {}
 };
 
@@ -30,8 +35,8 @@ class DataReader {
 public:
 	FILE* mFileHandle;
 	void* mMemoryHandle;
-	ulong mMemoryLength;
 	ulong mMemoryPosition;
+	ulong mMemoryLength;
 	int mUnk0x14;
 	bool mDeallocate;
 	char mUnk0x19;
@@ -169,6 +174,14 @@ struct DataSyncFunc_SyncBoolBit {
 	void Sync(DataSync& theSync, bool& theVal) { theSync.SyncBoolBit(theVal); }
 };
 
+struct DataSyncFunc_SyncSexyVector2 {
+	void Sync(DataSync& theSync, SexyVector2& theVal)
+	{
+		theSync.SyncFloat(theVal.x);
+		theSync.SyncFloat(theVal.y);
+	}
+};
+
 template <class T>
 struct DataSyncFunc_SyncSmartPtrFactory {
 	void Sync(DataSync& theSync, SmartPtr<T>& theVal) { DataSync_SyncSmartPtrFactory<T>(theSync, theVal, NULL); }
@@ -247,7 +260,7 @@ void DataSync_SyncSTLMapImpl(DataSync& theSync, T& theMap, KeySync theKeySync, V
 
 		int aNumItems = aReader->ReadLong();
 		typename T::iterator anItr = theMap.begin();
-		
+
 		for (int i = 0; i < aNumItems; i++) {
 			bool unk0x4c = theSync.mUnk0x4c;
 			theSync.mUnk0x4c = false;
@@ -258,7 +271,7 @@ void DataSync_SyncSTLMapImpl(DataSync& theSync, T& theMap, KeySync theKeySync, V
 			theSync.mUnk0x4c = unk0x4c;
 
 			anItr = theMap.insert(anItr, typename T::value_type(aKey, theValAllocStack.Alloc()));
-			
+
 			theValSync.Sync(theSync, anItr->second);
 		}
 	}
@@ -275,27 +288,54 @@ void DataSync_SyncSTLMapImpl(DataSync& theSync, T& theMap, KeySync theKeySync, V
 }
 
 template <class T, class ValSync, class AllocStackFunc>
-void DataSync_SyncSTLSetImpl(DataSync &theSync, T &theSet, ValSync theValSync, AllocStackFunc theAllocStack)
+void DataSync_SyncSTLSetImpl(DataSync& theSync, T& theSet, ValSync theValSync, AllocStackFunc theAllocStack)
 {
 	DataReader* aReader = theSync.mReader;
 	DataWriter* aWriter = theSync.mWriter;
-	if (aReader)
-	{
+	if (aReader) {
 		theSet.clear();
 
 		int aNumItems = aReader->ReadLong();
-		for (int i=0; i<aNumItems; i++)
-		{
+		for (int i = 0; i < aNumItems; i++) {
 			typename T::value_type aVal;
 			theSet.insert(theSet.end(), theAllocStack.Alloc());
 			theValSync.Sync(theSync, *theSet.end());
 		}
 	}
-	else
-	{
-		aWriter->WriteLong((int)theSet.size());
-		for (typename T::iterator anItr = theSet.begin(); anItr != theSet.end(); ++anItr)
-			theValSync.Sync(theSync,(typename T::value_type&)*anItr);
+	else {
+		aWriter->WriteLong((int) theSet.size());
+		for (typename T::iterator anItr = theSet.begin(); anItr != theSet.end(); ++anItr) {
+			theValSync.Sync(theSync, (typename T::value_type&) *anItr);
+		}
+	}
+}
+
+template <class T, class ValSync, class AllocStackFunc>
+void DataSync_SyncSTLVectorImpl(DataSync& theSync, T& theVector, ValSync theValSync, AllocStackFunc theAllocStack)
+{
+	DataReader* aReader = theSync.mReader;
+	DataWriter* aWriter = theSync.mWriter;
+	if (aReader) {
+		theVector.clear();
+
+		int aNumItems = aReader->ReadLong();
+
+		if (100000 < aNumItems) {
+			throw DataReaderException("");
+		}
+
+		theVector.reserve(aNumItems);
+		for (int i = 0; i < aNumItems; i++) {
+			typename T::value_type aVal;
+			theVector.push_back(theAllocStack.Alloc());
+			theValSync.Sync(theSync, theVector.back());
+		}
+	}
+	else {
+		aWriter->WriteLong((int) theVector.size());
+		for (typename T::iterator anItr = theVector.begin(); anItr != theVector.end(); ++anItr) {
+			theValSync.Sync(theSync, (typename T::value_type&) *anItr);
+		}
 	}
 }
 
@@ -303,8 +343,8 @@ template <class T, class ValSync>
 void DataSync_SyncSTLListImplSimple(DataSync& theSync, T& theList, ValSync theValSync)
 {
 	DataSyncFunc_AllocStack<typename T::value_type> aValAlloc;
-	*(char*)&aValAlloc = 0;
-	
+	*(char*) &aValAlloc = 0;
+
 	DataSync_SyncSTLListImpl(theSync, theList, theValSync, aValAlloc);
 }
 
@@ -312,11 +352,11 @@ template <class T, class KeySync, class ValSync>
 void DataSync_SyncSTLMapImplSimple(DataSync& theSync, T& theMap, KeySync theKeySync, ValSync theValSync)
 {
 	DataSyncFunc_AllocStack<typename T::key_type> aKeyAlloc;
-	*(char*)&aKeyAlloc = 0;
-	
+	*(char*) &aKeyAlloc = 0;
+
 	DataSyncFunc_AllocStack<typename T::mapped_type> aValAlloc;
-	*(char*)&aValAlloc = 0;
-	
+	*(char*) &aValAlloc = 0;
+
 	DataSync_SyncSTLMapImpl(theSync, theMap, theKeySync, theValSync, aKeyAlloc, aValAlloc);
 }
 
@@ -324,9 +364,18 @@ template <class T, class ValSync>
 void DataSync_SyncSTLSetImplSimple(DataSync& theSync, T& theSet, ValSync theValSync)
 {
 	DataSyncFunc_AllocStack<typename T::value_type> aValAlloc;
-	*(char*)&aValAlloc = 0;
-	
+	*(char*) &aValAlloc = 0;
+
 	DataSync_SyncSTLSetImpl(theSync, theSet, theValSync, aValAlloc);
+}
+
+template <class T, class ValSync>
+void DataSync_SyncSTLVectorImplSimple(DataSync& theSync, T& theVector, ValSync theValSync)
+{
+	DataSyncFunc_AllocStack<typename T::value_type> aValAlloc;
+	*(char*) &aValAlloc = 0;
+
+	DataSync_SyncSTLVectorImpl(theSync, theVector, theValSync, aValAlloc);
 }
 
 template <typename T>
@@ -373,28 +422,29 @@ void DataSync_SyncSmartPtr(DataSync& theSync, SmartPtr<T>& thePointer)
 template <typename T>
 T* DataSync_SyncRefCountFactory(DataSync& theSync, T* theFactory)
 {
-	if (theSync.mReader == NULL) {
-		ulong refCount = theSync.AddRefCount(theFactory);
-		theSync.mWriter->WriteLong(refCount);
-		if (refCount == 1) {
-			theSync.mWriter->WriteLong(theFactory->GetClass());
-			theFactory->SyncState(theSync);
-		}
-	}
-	else {
+	if (theSync.mReader != NULL) {
 		ulong refCount = theSync.mReader->ReadLong();
 		if (refCount == 0) {
 			return NULL;
 		}
 		else if (refCount == 1) {
-			T* newObject = theFactory->ClassFactory(theSync.mReader->ReadLong());
-			theSync.AddRefCount(theFactory);
+			T* newObject = T::ClassFactory(theSync.mReader->ReadLong());
+			theSync.AddRefCount(newObject);
 			newObject->SyncState(theSync);
 			return newObject;
 		}
 		else {
 			return (T*) theSync.GetRefCount(refCount);
 		}
+	}
+	else {
+		ulong refCount = theSync.AddRefCount(theFactory);
+		theSync.mWriter->WriteLong(refCount);
+		if (refCount == 1) {
+			theSync.mWriter->WriteLong(theFactory->GetClass());
+			theFactory->SyncState(theSync);
+		}
+		return theFactory;
 	}
 
 	return NULL;
@@ -404,11 +454,11 @@ template <typename T>
 void DataSync_SyncSmartPtrFactory(DataSync& theSync, SmartPtr<T>& thePointer, T* theFactory)
 {
 	if (theSync.mReader != NULL) {
-		RefCount* refCount = DataSync_SyncRefCountFactory(theSync, theFactory);
+		RefCount* refCount = DataSync_SyncRefCountFactory(theSync, thePointer.get());
 		thePointer = (T*) refCount;
 	}
 	else {
-		DataSync_SyncRefCountFactory(theSync, theFactory);
+		DataSync_SyncRefCountFactory(theSync, thePointer.get());
 	}
 }
 

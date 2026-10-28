@@ -33,10 +33,10 @@ Brick::Brick()
 	mUnk0x154 = 0.0f;
 	mUnk0x160 = 0.0f;
 	mUnk0x164 = 0.0f;
-	mUnk0x170 = 0;
-	mUnk0x174 = 0;
-	mUnk0x178 = 0;
-	mUnk0x17c = 0;
+	mUnk0x170[0] = 0;
+	mUnk0x170[1] = 0;
+	mUnk0x170[2] = 0;
+	mUnk0x170[3] = 0;
 	for (int i = 0; i < 10; i++) {
 		mUnk0x4f4[i] = NULL;
 	}
@@ -59,9 +59,85 @@ bool Brick::EditGetSetValHook(std::string* param_1, bool param_2)
 	return false;
 }
 
-// STUB: POPCAPGAME1 0x00488030
-void Brick::SyncState(DataSync& param_1)
+// FUNCTION: POPCAPGAME1 0x00488030
+void Brick::SyncState(DataSync& theSync)
 {
+	Poly::SyncCommon(theSync, PhysObj::mSyncType == 3);
+	if (theSync.mReader != NULL) {
+		mUnk0x16c = 0;
+		mUnk0x158 = 20.0f;
+		mUnk0x168 = 2;
+		mUnk0x164 = 0;
+		mUnk0x160 = 0;
+	}
+
+	bool local_24 = mUnk0x16c != 0;
+	bool local_1e = (mUnk0x168 == 2 || mUnk0x16c == 5) ? false : true;
+	bool local_1f = mUnk0x150 != 0.0f;
+	bool local_20 = mUnk0x154 != 0.0f;
+	bool local_21 = mUnk0x16c != 5;
+	bool local_22 = mUnk0x158 != 20.0f;
+	bool local_23 = mUnk0x160 != 0.0f;
+	bool local_25 = mUnk0x164 != 0.0f;
+	theSync.SyncBoolBit(mUnk0x12d);
+	theSync.SyncBoolBit(mUnk0x12e);
+	theSync.SyncBoolBit(local_24);
+	theSync.SyncBoolBit(local_1e);
+	theSync.SyncBoolBit(local_21);
+	theSync.SyncBoolBit(local_1f);
+	theSync.SyncBoolBit(local_20);
+	theSync.SyncBoolBit(local_22);
+	theSync.EndBit();
+
+	theSync.SyncBoolBit(local_23);
+	theSync.SyncBoolBit(local_25);
+	theSync.SyncBoolBit(mUnk0x12c);
+	theSync.EndBit();
+
+	if (local_23) {
+		theSync.SyncFloat(mUnk0x160);
+	}
+
+	if (local_25) {
+		theSync.SyncFloat(mUnk0x164);
+	}
+
+	if (local_24) {
+		theSync.SyncByte(mUnk0x16c);
+	}
+
+	if (local_1e) {
+		theSync.SyncByte(mUnk0x168);
+	}
+
+	if (local_1f) {
+		theSync.SyncFloat(mUnk0x150);
+	}
+
+	// twice LMAO
+	if (local_20) {
+		theSync.SyncFloat(mUnk0x154);
+		theSync.SyncFloat(mUnk0x154);
+	}
+
+	if (local_21) {
+		theSync.SyncFloat(mUnk0x14c);
+	}
+
+	if (local_22) {
+		theSync.SyncFloat(mUnk0x158);
+	}
+
+	theSync.SyncFloat(mUnk0x148);
+	theSync.SyncFloat(mUnk0x15c);
+
+	for (int i = 0; i < 4; i++) {
+		theSync.SyncByte(mUnk0x170[i]);
+	}
+
+	if (theSync.mReader != NULL && mSyncType != 3) {
+		InitFromParams();
+	}
 }
 
 // FUNCTION: POPCAPGAME1 0x00481d00
@@ -218,12 +294,11 @@ Image* Brick::GetTextureImage()
 bool Brick::GetCorners(SexyVector2* param_1)
 {
 	EnsureLines();
-	int* cornerIndices = &mUnk0x170;
 	for (int i = 0; i < 4; i++) {
-		if (cornerIndices[i] >= (int)mUnk0x108.size()) {
+		if (mUnk0x170[i] >= (int)mUnk0x108.size()) {
 			return false;
 		}
-		Line* line = mUnk0x108[cornerIndices[i]];
+		Line* line = mUnk0x108[mUnk0x170[i]];
 		param_1[i] = SexyVector2(line->mUnk0xec, line->mUnk0xf4);
 	}
 	return true;

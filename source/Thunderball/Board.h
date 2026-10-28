@@ -211,7 +211,7 @@ class Board : public Widget, public ButtonListener
 	void     InitEndLevelDialog(int param_1, bool param_2);
 	void     SyncCharacterOptions(bool param_1);
 	void     DoStageDialog(bool param_1);
-	bool     LoadLevelBase(std::string& param_1, std::list<Sexy::SmartPtr<PhysObj> > param_2, bool param_3);
+	bool     LoadLevelBase(std::string& param_1, std::list<Sexy::SmartPtr<PhysObj> >& param_2, bool param_3);
 	void     ChangeHighScore(HighScoreEntry* param_1);
 	void     SubmitHighScore();
 	void     CheckClearAccomplishment();

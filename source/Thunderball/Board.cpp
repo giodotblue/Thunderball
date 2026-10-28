@@ -6,6 +6,7 @@
 #include "CharacterDialog.h"
 #include "CharacterMgr.h"
 #include "CollisionMgr.h"
+#include "ConstEnums.h"
 #include "DataSync.h"
 #include "DebugMgr.h"
 #include "EffectMgr.h"
@@ -16,7 +17,9 @@
 #include "ImageMgr.h"
 #include "InterfaceMgr.h"
 #include "LevelEditor.h"
+#include "Line.h"
 #include "LogicMgr.h"
+#include "PegInfo.h"
 #include "PhysObj.h"
 #include "PlayerInfo.h"
 #include "Poly.h"
@@ -24,6 +27,7 @@
 #include "Res.h"
 #include "SlotMachineDialog.h"
 #include "SoundMgr.h"
+#include "StageMgr.h"
 #include "StatsMgr.h"
 #include "ThunderButton.h"
 #include "ThunderCommon.h"
@@ -1298,8 +1302,8 @@ void Board::CalcEndLevelDialog()
 	bool cVar2 = mLogicMgr->BeatLevel();
 	if (mUnk0x128 != NULL && 0 < mUnk0x128->mUnk0x70) {
 		int iVar3 = 0;
-		if (mUnk0x128->mUnk0x7c != 0) {
-			iVar3 = (mUnk0x128->mUnk0x80 - mUnk0x128->mUnk0x7c) / 28;
+		if (mUnk0x128->mUnk0x78.empty()) {
+			iVar3 = mUnk0x128->mUnk0x78.size();
 		}
 		if (iVar3 - 1 <= mUnk0xf0) {
 			cVar2 = mUnk0x128->mUnk0x70 < mLogicMgr->mUnk0x174[0];
@@ -1313,12 +1317,12 @@ void Board::CalcEndLevelDialog()
 		mEndLevelDialog->mUnk0x180 = 1;
 	}
 	else if (!mUnk0x128->mUnk0x74) {
-		if (mUnk0xf0 < mUnk0x128->mUnk0x78->size()) {
+		if (mUnk0xf0 < mUnk0x128->mUnk0x78.size()) {
 			mEndLevelDialog->mUnk0x180 = 4;
 		}
 	}
 	else if (cVar2) {
-		if (mUnk0x128->mUnk0x78->size() <= mUnk0xf0) {
+		if (mUnk0x128->mUnk0x78.size() <= mUnk0xf0) {
 			RecordTrophyResult(true);
 			mEndLevelDialog->mUnk0x180 = 6;
 		}
@@ -1453,14 +1457,40 @@ void Board::Clear(bool param_1)
 	DeleteReplays(false);
 }
 
-// STUB: POPCAPGAME1 0x00421070
+// FUNCTION: POPCAPGAME1 0x00421070
 void Board::AddObj(PhysObj* param_1, std::list<Sexy::SmartPtr<PhysObj>>::iterator param_2)
 {
+	SmartPtr<PhysObj> aSmartPtr = param_1;
+	mUnk0x190.insert(param_2, aSmartPtr);
+
+	mCollisionMgr->AddObj(param_1);
+	if (param_1->mUnk0x10 == 2 && static_cast<Ball*>(param_1)->mUnk0x18c) {
+		int iVar1 = 0;
+		
+		for (std::list<SmartPtr<Ball>>::iterator it = mUnk0x19c.begin(); it != mUnk0x19c.end(); ++it) {
+			int iVar2 = it->get()->mUnk0xe8;
+			if (iVar2 < 2) {
+				iVar1 |= (1 << iVar2);
+			}
+		}
+
+		for (int i = 0; i < 2; i++) {
+			if ((iVar1 & (1 << i)) == 0) {
+				static_cast<Ball*>(param_1)->mUnk0xe8 = i;
+				break;
+			}
+		}
+
+		mUnk0x19c.insert(mUnk0x19c.end(), static_cast<Ball*>(param_1));
+	}
+
+	param_1->AddedToGame();
 }
 
-// STUB: POPCAPGAME1 0x00422a90
+// FUNCTION: POPCAPGAME1 0x00422a90
 void Board::AddObj(PhysObj* param_1)
 {
+	AddObj(param_1, mUnk0x190.end());
 }
 
 // STUB: POPCAPGAME1 0x0040fed0
@@ -1489,9 +1519,53 @@ void Board::UpdateObjects(bool param_1)
 {
 }
 
-// STUB: POPCAPGAME1 0x00424fd0
+// FUNCTION: POPCAPGAME1 0x00424fd0
 void Board::CreateLayers()
 {
+	mUnk0x204.resize(0, 0);
+	mUnk0x1f4.resize(0, 0);
+	mUnk0x214.resize(0, 0);
+	mUnk0x224.resize(0, 0);
+	mUnk0x234.resize(0, 0);
+	mUnk0x244.resize(0, 0);
+	
+	std::map<float, PhysObj*> aMap;
+
+	for (std::list<SmartPtr<PhysObj>>::iterator it = mUnk0x190.begin(); it != mUnk0x190.end(); ++it) {
+		PhysObj* obj = it->get();
+		if (obj->mPegInfo != NULL && (obj->mPegInfo->mUnk0x18 != 0 || obj->mPegInfo->mUnk0x20 != 0 || obj->mPegInfo->mPegType == SCORE || obj->mPegInfo->mPegType == POWERUP)) {
+			mUnk0x244.push_back(obj);
+		}
+
+		if (obj->mUnk0x25) {
+            if (!obj->mUnk0x27) {
+                mUnk0x204.push_back(obj);
+
+                if (!obj->mUnk0x28 && !obj->mUnk0x2c) {
+                    if (obj->mUnk0x10 != 2) {
+                        mUnk0x214.push_back(obj);
+                    }
+                } 
+                else if (obj->mUnk0x2c) {
+                    aMap[obj->GetYPos()] = obj;
+                } 
+                else {
+                    if (!obj->mUnk0x29) {
+                        mUnk0x224.push_back(obj);
+                    } else {
+                        mUnk0x234.push_back(obj);
+                    }
+                }
+            } 
+            else {
+                mUnk0x224.push_back(obj);
+            }
+        }
+	}
+
+	for (std::map<float, PhysObj*>::iterator it = aMap.begin(); it != aMap.end(); ++it) {
+		mUnk0x214.push_back(it->second);
+	}
 }
 
 // STUB: POPCAPGAME1 0x0040ac40
@@ -1515,14 +1589,17 @@ void Board::DoStageDialog(bool param_1)
 // TEMPLATE: POPCAPGAME1 0x00408ea0
 // Sexy::DataSyncFunc_AllocStack<Sexy::SmartPtr<Sexy::PhysObj> >::Alloc
 
+// TEMPLATE: POPCAPGAME1 0x004067c0
+// Sexy::DataSync_SyncRefCountFactory<Sexy::PhysObj>
+
 // TEMPLATE: POPCAPGAME1 0x00408df0
 // Sexy::DataSync_SyncSmartPtrFactory<Sexy::PhysObj>
 
 // TEMPLATE: POPCAPGAME1 0x0040d420
-// std::list<Sexy::SmartPtr<Sexy::PhysObj>,std::allocator<Sexy::SmartPtr<Sexy::PhysObj> > >::clear
+// std::list<Sexy::SmartPtr<Sexy::Ball>,std::allocator<Sexy::SmartPtr<Sexy::Ball> > >::clear
 
-// TEMPLATE: POPCAPGAME1 0x0040ab00
-// std::list<Sexy::SmartPtr<Sexy::PhysObj>,std::allocator<Sexy::SmartPtr<Sexy::PhysObj> > >::_Buynode(struct std::_List_nod<class Sexy::SmartPtr<class Sexy::PhysObj>, class std::allocator<class Sexy::SmartPtr<class Sexy::PhysObj>>>::_Node *, struct std::_List_nod<class Sexy::SmartPtr<class Sexy::PhysObj>, class std::allocator<class Sexy::SmartPtr<class Sexy::PhysObj>>>::_Node *, class Sexy::SmartPtr<class Sexy::PhysObj> const &)
+// TEMPLATE: POPCAPGAME1 0x0040ab00 
+// std::list<Sexy::SmartPtr<Sexy::Ball>,std::allocator<Sexy::SmartPtr<Sexy::Ball> > >::_Buynode
 
 // TEMPLATE: POPCAPGAME1 0x0040e1c0
 // std::list<Sexy::SmartPtr<Sexy::PhysObj>,std::allocator<Sexy::SmartPtr<Sexy::PhysObj> > >::_Incsize
@@ -1531,8 +1608,9 @@ void Board::DoStageDialog(bool param_1)
 // Sexy::DataSync_SyncSTLListImpl<std::list<Sexy::SmartPtr<Sexy::PhysObj>,std::allocator<Sexy::SmartPtr<Sexy::PhysObj> > >,Sexy::DataSyncFunc_SyncSmartPtrFactory<Sexy::PhysObj>,Sexy::DataSyncFunc_AllocStack<Sexy::SmartPtr<Sexy::PhysObj> > >
 
 // FUNCTION: POPCAPGAME1 0x004227c0
-bool Board::LoadLevelBase(std::string& param_1, std::list<Sexy::SmartPtr<PhysObj>> param_2, bool param_3)
+bool Board::LoadLevelBase(std::string& param_1, std::list<Sexy::SmartPtr<PhysObj>>& param_2, bool param_3)
 {
+	OutputDebugStringA(param_1.c_str());
 	Buffer aBuffer = Buffer();
 	if (!GetThunderballApp()->ReadBufferFromFile(param_1, &aBuffer, false)) {
 		return param_3;
@@ -1590,9 +1668,100 @@ void Board::DoLevelDone()
 {
 }
 
-// STUB: POPCAPGAME1 0x0040f980
+// FUNCTION: POPCAPGAME1 0x0040f980
 void Board::SyncModeOptions()
 {
+	if (mUnk0xb4 == UNKNOWN_0) {
+        return;
+    }
+
+    if (mUnk0xb4 == UNKNOWN_5) {
+        mUnk0xc5 = true;
+        mLogicMgr->mUnk0xf5 = 1;
+        mReplayDialog->SetMode(true, false, true);
+        return;
+    }
+
+    if (mUnk0xb4 == DEMO) {
+		int local_38;
+		int local_34 = -1;
+		int dVar10 = mApp->mMaxStage;
+		int dVar11 = mApp->mMaxLevel;
+		if (!mApp->IsScreenSaver() && mApp->mCurProfile != NULL) {
+			dVar11 = mApp->mCurProfile->mUnk0x28;
+			dVar10 = mApp->mCurProfile->mUnk0x2c;
+		}
+		
+        mApp->mStageMgr->GetRandomLevel(dVar11, dVar10, &local_38, &local_34, false, 10, true);
+        
+        StageInfo* aStageInfo = mApp->mStageMgr->GetStageInfo(local_34);
+        if (aStageInfo == NULL) return;
+
+        LevelInfo* aLevelInfo = aStageInfo->GetLevelInfo(local_38);
+        if (aLevelInfo == 0) return;
+
+        mUnk0x1d4 = "levels/" + aLevelInfo->mUnk0x14 + ".dat";
+        return;
+    }
+
+    if (mUnk0xb4 == CHALLENGE) {
+        mUnk0x128 = mApp->mTrophyMgr->GetTrophyInfoById(mApp->mUnk0x76c);
+
+        if (mUnk0x128 == NULL || mUnk0xf0 < 0 || mUnk0xf0 >= mUnk0x128->mUnk0x78.size()) 
+        {
+            mApp->mGameMode = UNKNOWN_0;
+            mUnk0xb4 = UNKNOWN_0;
+            return;
+        }
+
+        mLogicMgr->mUnk0x124 = false;
+        mLogicMgr->mUnk0x244[1] = false;
+        mLogicMgr->mUnk0x244[0] = false;
+
+        std::string aLevelName = mUnk0x128->mUnk0x78[mUnk0xf0];
+
+        if (StrPrefixNoCase(aLevelName.c_str(), "rand", 10000000)) {
+            if (mUnk0xf0 == 0) {
+                mApp->mStageMgr->ResetLastUseTimes();
+            }
+
+            bool isRand = (_stricmp(aLevelName.c_str(), "rand2") == 0);
+            
+            LevelInfo* aRandomLevel = mApp->mStageMgr->GetRandomLevel(mApp->mCurProfile, isRand, 10);
+            if (aRandomLevel != 0) {
+                aLevelName = aRandomLevel->mUnk0x14;
+            }
+
+            mUnk0x1d4 = "levels/" + aLevelName + ".dat";
+
+            SyncCharacterOptions(true);
+        }
+        else if (_stricmp(aLevelName.c_str(), "pick") == 0) {
+        	LevelInfo* aLevelInfo = mApp->GetCurLevelInfo();
+            if (aLevelInfo != 0) {
+                aLevelName = aLevelInfo->mUnk0x14;
+            }
+
+            mUnk0x1d4 = "levels/" + aLevelName + ".dat";
+
+            SyncCharacterOptions(true);
+        }
+        return;
+    }
+
+    LevelInfo* aLevelInfo = mApp->GetCurLevelInfo();
+    if (aLevelInfo == NULL) return;
+
+    if (!mUnk0x123) {
+        mUnk0x1d4 = "levels/" + aLevelInfo->mUnk0x14 + ".dat";
+    }
+
+    mLogicMgr->mUnk0x124 = false;
+    mLogicMgr->mUnk0x244[1] = false;
+    mLogicMgr->mUnk0x244[0] = false;
+    mLogicMgr->mUnk0x124 = (mUnk0xb4 == DUEL);
+
+    SyncCharacterOptions(true);
 }
 
 // STUB: POPCAPGAME1 0x00424090
@@ -1897,10 +2066,12 @@ void Board::LoadLevel2(std::string& param_1)
 	mUnk0x1d4 = "";
 
 	std::string aFilePath = GetFileName(aLevelName);
-	std::list<Sexy::SmartPtr<Sexy::PhysObj>> anObjList;
-	if (!LoadLevelBase(aFilePath, anObjList, false)) {
+	std::list<Sexy::SmartPtr<Sexy::PhysObj>> anObjList1;
+	std::list<Sexy::SmartPtr<Sexy::PhysObj>> anObjList2;
+
+	if (!LoadLevelBase(aLevelName, anObjList2, false)) {
 		Clear(true);
-		anObjList.clear();
+		anObjList2.clear();
 	}
 
 	if (aFilePath[0] == '_') {
@@ -1908,22 +2079,22 @@ void Board::LoadLevel2(std::string& param_1)
 	}
 	else {
 		std::string aBasePath = "levels/_base.dat";
-		if (!LoadLevelBase(aBasePath, anObjList, true)) {
+		if (!LoadLevelBase(aBasePath, anObjList1, true)) {
 			Clear(true);
 		}
 	}
 
-	for (std::list<Sexy::SmartPtr<Sexy::PhysObj>>::iterator it = anObjList.begin(); it != anObjList.end(); ++it)
+	for (std::list<Sexy::SmartPtr<Sexy::PhysObj>>::iterator it = anObjList1.begin(); it != anObjList1.end(); ++it)
 	{
-		Sexy::PhysObj* anObj = it->get(); 
+		Sexy::PhysObj* anObj = it->get();
 		anObj->mUnk0x2a = true;
 		AddObj(anObj);
 	}
 
 	if (!mUnk0xc4) {
-		std::string anImagePath = "levels/" + GetFileName(aFilePath);
+		std::string anImagePath = "levels/" + GetFileName(aFilePath, true);
 		bool local_139 = false;
-		Image* aLevelImage = GetImageMgr()->GetImage(&anImagePath, &local_139, true);
+		Image* aLevelImage = GetImageMgr()->GetImage(anImagePath, &local_139, true);
 		if (!mUnk0x123) {
 			if (aLevelImage == NULL) {
 				MemoryImage* aMemoryImage = new MemoryImage();
@@ -2026,10 +2197,10 @@ void Board::LoadLevel2(std::string& param_1)
 			AddObj(aPoly);
 		}
 	}
-	
-	for (std::list<Sexy::SmartPtr<Sexy::PhysObj>>::iterator it = anObjList.begin(); it != anObjList.end(); ++it)
+
+	for (std::list<Sexy::SmartPtr<Sexy::PhysObj>>::iterator it = anObjList2.begin(); it != anObjList2.end(); ++it)
 	{
-		Sexy::PhysObj* anObj = it->get(); 
+		Sexy::PhysObj* anObj = it->get();
 		anObj->mUnk0x2a = false;
 		AddObj(anObj);
 	}

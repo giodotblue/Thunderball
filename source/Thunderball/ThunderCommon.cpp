@@ -1833,10 +1833,25 @@ void Sexy::RotateXY(float* param_1, float* param_2, float param_3, float param_4
 	*param_2 = param_4 + aY * aCos - anX * aSin;
 }
 
-// STUB: POPCAPGAME1 0x00407a60
+// FUNCTION: POPCAPGAME1 0x00407a60
 void Sexy::DrawCircle(Graphics *g ,float param_2, float param_3, float param_4, Image *param_5, Rect *param_6, int param_7) 
 {
-    printf("DrawCircle STUB\n");
+    Rect aRect(0, 0, param_5->mWidth, param_5->mHeight);
+	if (param_6 != NULL) {
+		aRect = *param_6;
+	}
+
+	float fVar3 = param_7 + param_4;
+	if (aRect.mWidth == (fVar3 + fVar3) && aRect.mHeight == (fVar3 + fVar3)) {
+		if (g->mIs3D) {
+			g->DrawImageF(param_5,  aRect.mWidth * -0.5f + param_2, aRect.mHeight * -0.5f + param_3, aRect);
+		} else {
+			g->DrawImage(param_5, (int)(aRect.mWidth * -0.5f + param_2), (int)(aRect.mHeight * -0.5f + param_3), aRect);
+		}
+	} else {
+		Rect aRect2(param_2 - fVar3, param_3 - fVar3, fVar3 + fVar3, fVar3 + fVar3);
+		g->DrawImage(param_5, aRect2, aRect);
+	}
 }
 
 // FUNCTION: POPCAPGAME1 0x00489f20

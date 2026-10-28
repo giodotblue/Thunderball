@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "CharacterMgr.h"
 #include "ConstEnums.h"
+#include "DataSync.h"
 #include "DebugMgr.h"
 #include "EffectMgr.h"
 #include "EndLevelDialog.h"
@@ -585,9 +586,51 @@ void LogicMgr::BeginTurn2()
 	}
 }
 
+// FUNCTION: POPCAPGAME1 0x0046ac70
 void LogicMgr::BeginShot(bool param_1) 
 {
-	// TODO
+	mUnk0xa8 = false;
+	mUnk0xaa = false;
+	mUnk0xfe = false;
+	mUnk0xf7 = false;
+	mUnk0x6c = -1000;
+
+	mUnk0xb4.resize(0);
+	mBoard->BeginShot();
+	mUnk0x248[mUnk0x128].mUnk0x0++;
+
+	for (std::set<SmartPtr<PhysObj>>::iterator anItr = mUnk0x358.begin(); anItr != mUnk0x358.end(); ++anItr) {
+		PhysObj* anObj = anItr->get();
+		PegInfo* aPegInfo = anObj->mPegInfo;
+		if (aPegInfo != NULL && aPegInfo->mUnk0x24 == 10) {
+			aPegInfo->mUnk0x24 = 0;
+			anObj->mPegInfo->mUnk0x20 = 0; // ??
+		}
+	}
+
+	if (mUnk0x34 != 0) {
+		mBoard->mFloatingTextMgr->EraseText(mUnk0x34);
+		mUnk0x34 = 0;
+	}
+
+	IncNumBalls(-1, 0, true);
+
+	mUnk0x13c = -1000;
+	mUnk0x140 = -1;
+	mUnk0x14c = -1;
+	mUnk0x150 = -1;
+
+	mUnk0x2c = Rand();
+	mUnk0x30 = Rand();
+
+	mBoard->mInterfaceMgr->BeginShot();
+
+	mUnk0xc4.clear();
+	mUnk0xd0.clear();
+
+	if (param_1) {
+		mBoard->GetReplayPoint();
+	}
 }
 
 void LogicMgr::StartInitLevel()
@@ -814,14 +857,52 @@ void LogicMgr::IncScore(int param_1, bool param_2)
 	// TODO
 }
 
+// FUNCTION: POPCAPGAME1 0x0045d880
 void LogicMgr::IncNumBalls(int param_1, int param_2, bool param_3)
 {
-	// TODO
+	mUnk0x17c[mUnk0x128] += param_1;
+	if (0 < param_1) {
+		if (param_3) {
+			mBoard->mInterfaceMgr->AddBottomBall(param_2);
+		} else {
+			mBoard->mInterfaceMgr->AddTopBalls(param_1);
+		}
+	}
+
+	if (mUnk0x17c[mUnk0x128] < 0) {
+		mUnk0x17c[mUnk0x128] = 0;
+	}
 }
 
+// FUNCTION: POPCAPGAME1 0x0046e740
 void LogicMgr::IncShotScore(int param_1)
 {
-	// TODO
+	int iVar1 = mUnk0x108;
+	mUnk0x108 = iVar1 + param_1;
+
+	if (!ClearedLevel()) {
+		int local_14[3] = {25000, 75000, 125000};
+		for (int i = 0; i < 3; i++) {
+			if (local_14[i] <= mUnk0x108 && (mUnk0x108 < local_14[i])) {
+				mBoard->mInterfaceMgr->mUnk0x50 = mUnk0x108;
+			}
+
+			if (!mUnk0x124) {
+				IncNumBalls(1, 0, false);
+			} else {
+				DoStyleShot(
+					ModVal(0,"SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1054,603",100), 
+					ModVal(0,"SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1055,603", 88),
+					STYLESHOT_19,
+					NULL
+				);
+			}
+
+			mBoard->mSoundMgr->AddSound(SOUND_EXTRABALL, 0, 0, 0, 10, 1.0f);
+			mUnk0x248[mUnk0x128].mUnk0x10 += i + 1;
+			mUnk0x1a = 1;
+		}
+	}
 }
 
 // FUNCTION: POPCAPGAME1 0x004370b0
@@ -872,9 +953,15 @@ void LogicMgr::SyncClickTimes(DataSync* theSync)
 	// TODO
 }
 
+// FUNCTION: POPCAPGAME1 0x0045d7f0
 void LogicMgr::WriteClickTimes()
 {
-	// TODO
+	if (!mBoard->mUnk0x174.empty()) {
+		if (mBoard->mUnk0x174.back() != NULL) {
+			DataSync aSync;
+			SyncClickTimes(&aSync);
+		}
+	}
 }
 
 void LogicMgr::SyncState(DataSync& theSync)
@@ -1187,9 +1274,19 @@ void LogicMgr::MakeScorePeg()
 	}
 }
 
-// STUB: POPCAPGAME1 0x0043d430
+// FUNCTION: POPCAPGAME1 0x0043d430
 void ShufflePegs(std::vector<PhysObj*>& param_1)
 {
+	if (!param_1.empty() && (1 < param_1.size())) {
+		for (int i = 1000; i > 0; i--) {
+			int aIndex1 = Rand() % param_1.size();
+			int aIndex2 = Rand() % param_1.size();
+			
+			PhysObj* aTemp = param_1[aIndex1];
+			param_1[aIndex1] = param_1[aIndex2];
+			param_1[aIndex2] = aTemp;
+		}
+	}
 }
 
 // FUNCTION: POPCAPGAME1 0x00457960
@@ -1206,17 +1303,17 @@ void LogicMgr::MakeGoalPegs()
 			aPhysObj->mPegInfo->SetHit(false);
 			aPhysObj->SetActive(true);
 			mUnk0x340.push_back(aPhysObj);
-		}
 
-		if (!aPhysObj->mPegInfo->mUnk0x15) {
-			if (aPhysObj->mPegInfo->mPegType == GOAL) {
-				mUnk0x358.insert(aPhysObj);
+			if (!aPhysObj->mPegInfo->mUnk0x15) {
+				if (aPhysObj->mPegInfo->mPegType == GOAL) {
+					mUnk0x358.insert(aPhysObj);
+				} else {
+					mUnk0x364.insert(aPhysObj);
+				}
 			} else {
-				mUnk0x364.insert(aPhysObj);
+				aPhysObj->SetPegType(NORMAL);
+				aNormalPegs.push_back(aPhysObj);
 			}
-		} else {
-			aPhysObj->SetPegType(NORMAL);
-			aNormalPegs.push_back(aPhysObj);
 		}
 	}
 
@@ -1238,7 +1335,7 @@ void LogicMgr::MakeGoalPegs()
 		mUnk0x364.insert(aPhysObj);
 	}
 
-	for (std::set<SmartPtr<PhysObj>>::iterator anItr = mUnk0x364.begin(); anItr != mUnk0x358.end(); ++anItr) {
+	for (std::set<SmartPtr<PhysObj>>::iterator anItr = mUnk0x364.begin(); anItr != mUnk0x364.end(); ++anItr) {
 		PhysObj* aPhysObj = anItr->get();
 		if (aPhysObj->mPegInfo->mPegType != NORMAL) {
 			mBoard->mApp->GetMaxLevel();
@@ -1297,10 +1394,39 @@ int LogicMgr::GetSlotMachinePowerup()
 	return aPowerups[aSelector % aPowerups.size()];
 }
 
-// STUB: POPCAPGAME1 0x0046ecb0
+// FUNCTION: POPCAPGAME1 0x0046ecb0
 void LogicMgr::DoSlotMachine(Ball* param_1, PhysObj* param_2)
 {
-	// TODO
+	if (!mUnk0xf5) {
+		param_2->mPegInfo->mUnk0x20 = 0;
+	}
+
+	if (param_1->mUnk0x18c != 0) {
+		for (std::list<SmartPtr<Ball>>::iterator anItr = mBoard->mUnk0x19c.begin(); anItr != mBoard->mUnk0x19c.end(); ++anItr) {
+			Ball* aBall = anItr->get();
+			if (aBall->mUnk0x188.get() == param_1) {
+				param_1 = aBall;
+				break;
+			}
+		}
+	}
+
+	bool bVar3 = 0 < mBoard->mUnk0x130;
+
+	if (bVar3) {
+		SetSlotMachineResult(Rand() % 4);
+	}
+
+	if (!mUnk0xf5 && !bVar3) {
+		mBoard->mSoundMgr->AddSound(SOUND_POWERUP_LUCKYSPIN, 0.0f, 0, 0, 1, 1.0f);
+		mBoard->DoSlotMachineDialog(param_1, param_2);
+	} else {
+		int aSlotMachineResult = GetSlotMachineResult();
+		if (aSlotMachineResult != -1) {
+			DoSlotMachineResult(aSlotMachineResult, param_1);
+			FinishSlotMachine(param_1, param_2);
+		}
+	}
 }
 
 // STUB: POPCAPGAME1 0x0045e830
@@ -1520,9 +1646,12 @@ void LogicMgr::SpeedTransition()
 	}
 }
 
+// FUNCTION: POPCAPGAME1 0x0043f020
 void LogicMgr::SetCharacters(int param_1, int param_2)
 {
-	// TODO
+	mUnk0x184[0] = param_1;
+	mUnk0x184[1] = param_2;
+	mBoard->mCharacterMgr->SetCurCharacter(mUnk0x184[mUnk0x128]);
 }
 
 // FUNCTION: POPCAPGAME1 0x0043d4d0
@@ -1600,9 +1729,15 @@ bool LogicMgr::BeatLevel()
 	return mUnk0x358.empty();
 }
 
-void LogicMgr::ClearedLevel()
+// FUNCTION: POPCAPGAME1 0x0043d580
+bool LogicMgr::ClearedLevel()
 {
-	// TODO
+	if (!mUnk0xfb) {
+		return mUnk0x358.empty();
+	}
+	else {
+		return mUnk0x358.empty() && mUnk0x364.empty();
+	}
 }
 
 void LogicMgr::NotifySpookyCollision(PhysObj* param_1, PhysObj* param_2)

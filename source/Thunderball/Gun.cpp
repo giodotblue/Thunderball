@@ -331,7 +331,7 @@ void Gun::UpdateBouncyGuide()
 {
 }
 
-// STUB: POPCAPGAME1 0x00484530
+// FUNCTION: POPCAPGAME1 0x00484530
 SmartPtr<Ball> Gun::Fire(bool param_1)
 {
 	if (mBall.get() == NULL)

@@ -21,7 +21,7 @@ ReplayDialog::ReplayDialog(Board* param_1) : ThunderDialog(0x16, true, "", "", "
 	const char* options[5] = {"Replay", "Next", "Prev", "Save", "Done"};
 	mReplayButton = MakeEmbeddedButton(0, this, IMAGE_DLG_INSTANTREPLAY, false);
 	AddWidget(mReplayButton);
-	for (int i = 1; i < 5; i++) {
+	for (int i = 0; i < 4; i++) {
 		mOptionButtons[i] = MakePurpleButton(i, this, options[i]);
 		AddWidget(mOptionButtons[i]);
 		if (5 <= i) {

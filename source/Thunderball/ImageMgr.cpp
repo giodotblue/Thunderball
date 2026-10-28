@@ -1,4 +1,6 @@
 #include "ImageMgr.h"
+#include "SexyAppFramework/Common.h"
+#include "ThunderballApp.h"
 
 #include <SexyAppFramework/Image.h>
 #include <SexyAppFramework/DDImage.h>
@@ -47,22 +49,37 @@ void ImageMgr::Clear()
 	mDeleteImages.clear();
 }
 
+// TEMPLATE: POPCAPGAME1 0x00452bf0
+// std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,Sexy::ResourceManager::BaseRes *,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,Sexy::ResourceManager::BaseRes *> >,0> >::insert(struct std::pair<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>> const, int> const &)
+
 // FUNCTION: POPCAPGAME1 0x00457760
-MemoryImage* ImageMgr::GetImage(std::string* theName, bool* param_2, bool param_3)
+MemoryImage* ImageMgr::GetImage(const std::string& theName, bool* param_2, bool param_3)
 {
-	std::map<std::string, MemoryImage*>::iterator anItr = mImages.find(std::string(*theName));
-	if (anItr->second == NULL) {
+	std::pair<std::map<std::string, MemoryImage*>::iterator, bool> anImage = 
+        mImages.insert(std::map<std::string, MemoryImage*>::value_type(theName, (MemoryImage*)NULL));
+
+	std::map<std::string, MemoryImage*>::iterator it = anImage.first;
+
+	if (it->second == NULL) {
 		if (param_3) {
-			anItr->second = gSexyApp->GetImage(*theName, true);
+			it->second = GetThunderballApp()->GetImage(theName, param_3);
+		  
+			if (param_2 != NULL) {
+				*param_2 = false;
+			}
+		} else {
+			if (param_2 != NULL) {
+				*param_2 = true;
+			}
 		}
+	} else {
 		if (param_2 != NULL) {
 			*param_2 = false;
 		}
 	}
-	else if (param_2 != NULL) {
-		*param_2 = true;
-	}
-	return anItr->second;
+
+	return it->second;
+
 }
 
 // FUNCTION: POPCAPGAME1 0x0045c560
