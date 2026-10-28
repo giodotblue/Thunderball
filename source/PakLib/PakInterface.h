@@ -66,6 +66,7 @@ public:
 	virtual BOOL			FindClose(HANDLE hFindFile) = 0;
 };
 
+// VTABLE: POPCAPGAME1 0x00615640
 class PakInterface : public PakInterfaceBase
 {
 public:
