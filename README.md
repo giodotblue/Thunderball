@@ -1,5 +1,5 @@
 # Peggle Deluxe Decompilation  
-[Discord](https://discord.gg/83D3CSVxsj) | [Contributing](https://github.com/teampopwork/Thunderball/blob/main/CONTRIBUTING.md) | [License](https://github.com/teampopwork/Thunderball/blob/main/LICENSE.md)  
+[Discord](https://discord.gg/dAtxeUMetD) | [Contributing](https://github.com/teampopwork/Thunderball/blob/main/CONTRIBUTING.md) | [License](https://github.com/teampopwork/Thunderball/blob/main/LICENSE.md)  
 
 This project aims to decompile the English 1.01 executable of Peggle Deluxe from the steam release. Many variable or function names come from unstripped ports to other platforms cross-referenced with the target windows binary.
 

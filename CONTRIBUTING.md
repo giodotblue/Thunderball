@@ -34,4 +34,4 @@ Since the project is set up to check accuracy with reccmp, we must add annotatio
 We aim for a high percentage match with the functions, but ultimately as long as the logic is accurate to the original game is the priority.
 
 ## Questions
-If you have any questions, you can ask them in our [discord server.](https://discord.gg/83D3CSVxsj)
+If you have any questions, you can ask them in our [discord server.](https://discord.gg/dAtxeUMetD)
