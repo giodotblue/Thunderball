@@ -6,6 +6,7 @@
 namespace ImageLib
 {
 
+// VTABLE: POPCAPGAME1 0x00615408
 class Image
 {
 public:
