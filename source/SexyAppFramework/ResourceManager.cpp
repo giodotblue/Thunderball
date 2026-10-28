@@ -13,15 +13,29 @@
 
 using namespace Sexy;
 
+// SYNTHETIC: POPCAPGAME1 0x0051a3c0
+// Sexy::ResourceManager::ImageRes::`scalar deleting destructor'
+
+// FUNCTION: POPCAPGAME1 0x0051a290
+// Sexy::ResourceManager::ImageRes::~ImageRes
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x004fc020
 void ResourceManager::ImageRes::DeleteResource()
 {	
 	mImage.Release();
 }
 
+// SYNTHETIC: POPCAPGAME1 0x00516c90
+// Sexy::ResourceManager::SoundRes::`scalar deleting destructor'
+
+// FUNCTION: POPCAPGAME1 0x00516bb0
+// Sexy::ResourceManager::SoundRes::~SoundRes
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x004fc030
 void ResourceManager::SoundRes::DeleteResource()
 {
 	if (mSoundId >= 0)
@@ -30,8 +44,15 @@ void ResourceManager::SoundRes::DeleteResource()
 	mSoundId = -1;
 }
 
+// SYNTHETIC: POPCAPGAME1 0x0051a460
+// Sexy::ResourceManager::FontRes::`scalar deleting destructor'
+
+// FUNCTION: POPCAPGAME1 0x0051a3f0
+// Sexy::ResourceManager::FontRes::~FontRes
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+// FUNCTION: POPCAPGAME1 0x004fc060
 void ResourceManager::FontRes::DeleteResource()
 {
 	delete mFont;
