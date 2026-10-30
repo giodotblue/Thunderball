@@ -50,6 +50,7 @@ class Board : public Widget, public ButtonListener
 {
   public:
     static bool mGenImageOnLoad;
+	static bool mSlowMoPending;
 
 	TypingCheck* mTypingCheckList[9]; // +0x8c
 	ThunderballApp* mApp; // +0xb0
@@ -205,7 +206,7 @@ class Board : public Widget, public ButtonListener
 	void     AddObj(PhysObj* param_1);
 	void     RemoveObj(PhysObj* param_1);
 	void     KillAllBalls();
-	void     CheckForFever(Ball* param_1);
+	bool     CheckForFever(Ball* param_1);
 	void     UpdateObjects(bool param_1);
 	void     CreateLayers();
 	void     InitEndLevelDialog(int param_1, bool param_2);

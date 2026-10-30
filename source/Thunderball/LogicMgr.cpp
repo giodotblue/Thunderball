@@ -1446,9 +1446,33 @@ void LogicMgr::DoFever()
 	// TODO
 }
 
+// FUNCTION: POPCAPGAME1 0x0045e920
 void LogicMgr::DoFeverSlow()
 {
-	// TODO
+	mBoard->SetSlowMo(true, 100);
+	mBoard->mUnk0xc8 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1242,3741", 100);
+	mBoard->mUnk0x11c = true;
+
+	if (ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1243,3744", true)) {
+		mBoard->mSoundMgr->FadeMusic( ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1244,3745", 75));
+	}
+
+	if (mUnk0xb0 != NULL) {
+		mBoard->mSoundMgr->AddFadeSound(mUnk0xb0);
+		mUnk0xb0 = NULL;
+	}
+
+	mBoard->mSoundMgr->AddSound(SOUND_SLOWMO, 0.0f, 0, 0, 30, -1.0f);
+	if (mBoard->mUnk0x19c.size() == 1 && !mUnk0xfa) {
+		Ball* aBall = mBoard->mUnk0x19c.front();
+		float fVar1 = aBall->mUnk0x100;
+		float fVar5 = aBall->mUnk0xfc;
+		fVar1 = fVar5 * fVar5 + fVar1 * fVar1;
+		fVar5 = ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\LogicMgr.cpp1245,3766", 1.0f);
+		if (fVar5 < fVar1 != (fVar5 == fVar1)) {
+			mUnk0xfa = true;
+		}
+	}
 }
 
 void LogicMgr::DoFeverTron(Ball* param_1, PhysObj* param_2)
@@ -1583,10 +1607,13 @@ void LogicMgr::AddStyleScoreText(int param_1, int param_2)
 	// TODO
 }
 
+// FUNCTION: POPCAPGAME1 0x0043d5b0
 int LogicMgr::GetGoalPegsLeft()
 {
-	// TODO
-	return 0;
+	if (mUnk0xfb) {
+		return mUnk0x364.size() + mUnk0x358.size();
+	}
+	return mUnk0x358.size();
 }
 
 int LogicMgr::GetRemainingGoalPeg()

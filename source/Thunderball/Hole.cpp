@@ -3,6 +3,7 @@
 #include "Ball.h"
 #include "DataSync.h"
 #include "Mover.h"
+#include "PhysObj.h"
 
 #include <SexyAppFramework/Graphics.h>
 

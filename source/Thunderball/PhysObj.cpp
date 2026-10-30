@@ -1113,3 +1113,11 @@ SexyVector2 PhysObj::GetCenter()
 {
 	return SexyVector2((mUnk0x1c + mUnk0x14) * 0.5, (mUnk0x20 + mUnk0x18) * 0.5);
 }
+
+// FUNCTION: POPCAPGAME1 0x004326e0
+bool PhysObj::FUN_004326e0(PhysObj* param_1)
+{
+	if (mUnk0x14 <= param_1->mUnk0x1c && (param_1->mUnk0x14 < mUnk0x1c != param_1->mUnk0x14 == mUnk0x1c && mUnk0x18 <= param_1->mUnk0x20 && (param_1->mUnk0x18 < mUnk0x20 != param_1->mUnk0x18 == mUnk0x20))) {
+		return true;
+	}
+}

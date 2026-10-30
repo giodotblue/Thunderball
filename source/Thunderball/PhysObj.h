@@ -152,6 +152,8 @@ public:
 		float param_7
 	);
 	void DrawImage(Graphics* g, float param_2, float param_3, float param_4, bool param_5, bool param_6);
+
+	bool FUN_004326e0(PhysObj* param_1);
 };
 
 } // namespace Sexy

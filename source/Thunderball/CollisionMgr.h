@@ -1,10 +1,11 @@
 #ifndef __COLLISION_MGR_H__
 #define __COLLISION_MGR_H__
 
+#include <SexyAppFramework/SmartPtr.h>
+
 #include <set>
 #include <utility>
 #include <vector>
-#include "../SexyAppFramework/SmartPtr.h"
 
 namespace Sexy
 {
@@ -17,7 +18,11 @@ public:
 	struct EndPoint {
 		PhysObj* mObject;
 		float mValue1;
-		float mValue2;
+		bool mValue2;
+
+		bool operator<(const EndPoint& other) const {
+        	return this->mValue1 < other.mValue1;
+    	}
 	};
 
 	bool mUnk0x0;
@@ -25,8 +30,8 @@ public:
 	std::vector<EndPoint> mObjects2;
 	std::set<std::pair<PhysObj*, PhysObj*> > mCollisions;
 	int mUnk0x30;
-	int mUnk0x34;
-	std::vector<int> mUnk0x38;
+	Ball* mUnk0x34;
+	std::vector<PhysObj*> mUnk0x38;
 	std::vector<std::pair<RefCountPtr, RefCountPtr> > mUnk0x48;
 	int mUnk0x58;
 	int mUnk0x5C;
