@@ -133,6 +133,7 @@ void Graphics::SetColor(const Color& theColor)
 	mColor = theColor;
 }
 
+// FUNCTION: POPCAPGAME1 0x004cca10
 const Color& Graphics::GetColor()
 {
 	return mColor;
@@ -144,6 +145,7 @@ void Graphics::SetDrawMode(int theDrawMode)
 	mDrawMode = theDrawMode;
 }
 
+// FUNCTION: POPCAPGAME1 0x004cca30
 int Graphics::GetDrawMode()
 {
 	return mDrawMode;
@@ -155,6 +157,7 @@ void Graphics::SetColorizeImages(bool colorizeImages)
 	mColorizeImages = colorizeImages;
 }
 
+// FUNCTION: POPCAPGAME1 0x004cca50
 bool Graphics::GetColorizeImages()
 {
 	return mColorizeImages;

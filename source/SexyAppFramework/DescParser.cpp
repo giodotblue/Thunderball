@@ -13,12 +13,14 @@ DescParser::~DescParser()
 {
 }
 
+// FUNCTION: POPCAPGAME1 0x0050aa70
 bool DescParser::Error(const std::string& theError)
 {
 	mError = theError;
 	return false;
 }
 
+// FUNCTION: POPCAPGAME1 0x00503ff0
 DataElement* DescParser::Dereference(const std::string& theString)
 {
 	std::string aDefineName = StringToUpper(theString);
@@ -30,12 +32,14 @@ DataElement* DescParser::Dereference(const std::string& theString)
 		return NULL;
 }
 
+// FUNCTION: POPCAPGAME1 0x004fe490
 bool DescParser::IsImmediate(const std::string& theString)
 {
 	return (((theString[0] >= '0') && (theString[0] <= '9')) || (theString[0] == '-') || 
 		(theString[0] == '+') || (theString[0] == '\'') || (theString[0] == '"'));
 }
 
+// FUNCTION: POPCAPGAME1 0x005040c0
 std::string DescParser::Unquote(const std::string& theQuotedString)
 {
 	if ((theQuotedString[0] == '\'') || (theQuotedString[0] == '"'))
@@ -66,6 +70,7 @@ std::string DescParser::Unquote(const std::string& theQuotedString)
 		return theQuotedString;
 }
 
+// FUNCTION: POPCAPGAME1 0x005124f0
 bool DescParser::GetValues(ListDataElement* theSource, ListDataElement* theValues)
 {
 	theValues->mElementVector.clear();
@@ -118,6 +123,7 @@ bool DescParser::GetValues(ListDataElement* theSource, ListDataElement* theValue
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0050aa90
 std::string DescParser::DataElementToString(DataElement* theDataElement)
 {
 	if (theDataElement->mIsList)
@@ -145,6 +151,7 @@ std::string DescParser::DataElementToString(DataElement* theDataElement)
 	}
 }
 
+// FUNCTION: POPCAPGAME1 0x0050ac70
 bool DescParser::DataToString(DataElement* theSource, std::string* theString)
 {
 	*theString = "";
@@ -183,6 +190,7 @@ bool DescParser::DataToInt(DataElement* theSource, int* theInt)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0051e810
 bool DescParser::DataToStringVector(DataElement* theSource, StringVector* theStringVector)
 {
 	theStringVector->clear();
@@ -231,6 +239,7 @@ bool DescParser::DataToStringVector(DataElement* theSource, StringVector* theStr
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x00512850
 bool DescParser::DataToList(DataElement* theSource, ListDataElement* theValues)
 {
 	if (theSource->mIsList)
@@ -250,6 +259,7 @@ bool DescParser::DataToList(DataElement* theSource, ListDataElement* theValues)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x0051eaa0
 bool DescParser::DataToIntVector(DataElement* theSource, IntVector* theIntVector)
 {
 	theIntVector->clear();
@@ -270,6 +280,31 @@ bool DescParser::DataToIntVector(DataElement* theSource, IntVector* theIntVector
 	return true;
 }
 
+// TEMPLATE: POPCAPGAME1 0x004ff830
+// std::vector<double,std::allocator<double> >::erase
+
+// TEMPLATE: POPCAPGAME1 0x00502b60
+// std::vector<double,std::allocator<double> >::_Ufill
+
+// TEMPLATE: POPCAPGAME1 0x00501c60
+// std::vector<double,std::allocator<double> >::_Umove<double *>
+
+// TEMPLATE: POPCAPGAME1 0x004ff2d0
+// stdext::_Unchecked_move_backward<double *,double *>
+
+// TEMPLATE: POPCAPGAME1 0x004ff2b0
+// std::fill<double *,double>
+
+// TEMPLATE: POPCAPGAME1 0x0050b620
+// std::vector<double,std::allocator<double> >::_Insert_n
+
+// TEMPLATE: POPCAPGAME1 0x0050e240
+// std::vector<double,std::allocator<double> >::insert
+
+// TEMPLATE: POPCAPGAME1 0x0050f620
+// std::vector<double,std::allocator<double> >::push_back
+
+// FUNCTION: POPCAPGAME1 0x0051ec20
 bool DescParser::DataToDoubleVector(DataElement* theSource, DoubleVector* theDoubleVector)
 {
 	theDoubleVector->clear();
@@ -290,6 +325,7 @@ bool DescParser::DataToDoubleVector(DataElement* theSource, DoubleVector* theDou
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x005128a0
 bool DescParser::ParseToList(const std::string& theString, ListDataElement* theList, bool expectListEnd, int* theStringPos)
 {
 	bool inSingleQuotes = false;
@@ -400,6 +436,7 @@ bool DescParser::ParseToList(const std::string& theString, ListDataElement* theL
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x00512be0
 bool DescParser::ParseDescriptorLine(const std::string& theDescriptorLine)
 {
 	ListDataElement aParams;
@@ -421,6 +458,10 @@ bool DescParser::ParseDescriptorLine(const std::string& theDescriptorLine)
 	return true;
 }
 
+// TEMPLATE: POPCAPGAME1 0x004fda70
+// std::_String_const_iterator<char,std::char_traits<char>,std::allocator<char> >::_String_const_iterator<char,std::char_traits<char>,std::allocator<char> >
+
+// FUNCTION: POPCAPGAME1 0x00512d00
 bool DescParser::LoadDescriptor(const std::string& theFileName)
 {
 	mCurrentLineNum = 0;

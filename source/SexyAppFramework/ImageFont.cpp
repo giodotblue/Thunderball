@@ -31,6 +31,7 @@ SingleDataElement::SingleDataElement()
 	mIsList = false;
 }
 
+// FUNCTION: POPCAPGAME1 0x00503eb0
 SingleDataElement::SingleDataElement(const std::string theString) :	
 	mString(theString)
 {	
@@ -131,6 +132,7 @@ CharData::CharData()
 		mKerningOffsets[i] = 0;
 }
 
+// FUNCTION: POPCAPGAME1 0x004ea500
 FontLayer::FontLayer(FontData* theFontData)
 {	
 	mFontData = theFontData;	
@@ -149,6 +151,7 @@ FontLayer::FontLayer(FontData* theFontData)
 	mBaseOrder = 0;
 }
 
+// FUNCTION: POPCAPGAME1 0x004ea660
 FontLayer::FontLayer(const FontLayer& theFontLayer) :	
 	mFontData(theFontLayer.mFontData),
 	mRequiredTags(theFontLayer.mRequiredTags),
@@ -223,6 +226,7 @@ void FontData::Ref()
 	mRefCount++;
 }
 
+// FUNCTION: POPCAPGAME1 0x004cd2a0
 void FontData::DeRef()
 {
 	if (--mRefCount == 0)
@@ -281,6 +285,7 @@ bool FontData::DataToLayer(DataElement* theSource, FontLayer** theFontLayer)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x004e8290
 bool FontData::GetColorFromDataElement(DataElement *theElement, Color &theColor)
 {
 	if (theElement->mIsList)
@@ -305,6 +310,78 @@ bool FontData::GetColorFromDataElement(DataElement *theElement, Color &theColor)
 	theColor = aColor;
 	return true;
 }
+
+// TEMPLATE: POPCAPGAME1 0x004e7390
+// std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,bool,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,bool> >,0> >::erase(class std::_Tree<class std::_Tmap_traits<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>>, class Sexy::MemoryImage *, struct std::less<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>>>, class std::allocator<struct std::pair<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>> const, class Sexy::MemoryImage *>>, 0>>::iterator)
+
+// TEMPLATE: POPCAPGAME1 0x004dd8f0
+// std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,Sexy::FontLayer *>::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,Sexy::FontLayer *>
+
+// TEMPLATE: POPCAPGAME1 0x004e91b0
+// std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,Sexy::ResourceManager::BaseRes *,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,Sexy::ResourceManager::BaseRes *> >,0> >::insert(struct std::pair<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>> const, int> const &)
+
+// TEMPLATE: POPCAPGAME1 0x004e90e0
+// std::vector<Sexy::DataElement *,std::allocator<Sexy::DataElement *> >::push_back
+
+// TEMPLATE: POPCAPGAME1 0x00503eb0
+// Sexy::SingleDataElement::SingleDataElement(class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>>)
+
+// TEMPLATE: POPCAPGAME1 0x0040d3f0
+// std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >(class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>> const &)
+
+// TEMPLATE: POPCAPGAME1 0x00406190
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::operator[]
+
+// TEMPLATE: POPCAPGAME1 0x00452e30
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::~vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >
+
+// TEMPLATE: POPCAPGAME1 0x004061e0
+// std::vector<Sexy::DataElement *,std::allocator<Sexy::DataElement *> >::size
+
+// TEMPLATE: POPCAPGAME1 0x004f6c80
+// std::list<Sexy::FontLayer,std::allocator<Sexy::FontLayer> >::_Buynode(struct std::_List_nod<class Sexy::FontLayer, class std::allocator<class Sexy::FontLayer>>::_Node *, struct std::_List_nod<class Sexy::FontLayer, class std::allocator<class Sexy::FontLayer>>::_Node *, class Sexy::FontLayer const &)
+
+// TEMPLATE: POPCAPGAME1 0x004de750
+// std::list<Sexy::FontLayer,std::allocator<Sexy::FontLayer> >::_Incsize
+
+// TEMPLATE: POPCAPGAME1 0x004f6dc0
+// std::list<Sexy::FontLayer,std::allocator<Sexy::FontLayer> >::push_back
+
+// TEMPLATE: POPCAPGAME1 0x0044a6e0
+// std::_Uninit_fill_n<std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,unsigned int,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >
+
+// TEMPLATE: POPCAPGAME1 0x0044d750
+// std::_Uninit_move<std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >
+
+// TEMPLATE: POPCAPGAME1 0x00452e80
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::_Ufill
+
+// TEMPLATE: POPCAPGAME1 0x00459ed0
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::_Umove<std::basic_string<char,std::char_traits<char>,std::allocator<char> > *>
+
+// TEMPLATE: POPCAPGAME1 0x00446290
+// std::basic_string<char,std::char_traits<char>,std::allocator<char> >::swap
+
+// TEMPLATE: POPCAPGAME1 0x00454390
+//  std::_Move_backward_opt<std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,std::basic_string<char,std::char_traits<char>,std::allocator<char> > *>
+
+// TEMPLATE: POPCAPGAME1 0x00459f00
+// stdext::_Unchecked_move_backward<std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,std::basic_string<char,std::char_traits<char>,std::allocator<char> > *>
+
+// TEMPLATE: POPCAPGAME1 0x0044a290
+// std::fill<std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
+
+// TEMPLATE: POPCAPGAME1 0x0045fa00
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::_Insert_n
+
+// TEMPLATE: POPCAPGAME1 0x00462700
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::insert
+
+// TEMPLATE: POPCAPGAME1 0x00464dc0
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::push_back
+
+// TEMPLATE: POPCAPGAME1 0x0049ef60
+// std::vector<wchar_t,std::allocator<wchar_t> >::~vector<wchar_t,std::allocator<wchar_t> >
 
 // FUNCTION: POPCAPGAME1 0x004f6e40
 bool FontData::HandleCommand(const ListDataElement& theParams)	
@@ -1207,7 +1284,7 @@ ImageFont::ImageFont(SexyAppBase* theSexyApp, const std::string& theFontDescFile
 	mForceScaledImagesWhite = false;
 }
 
-// FUNCTION: POPCAPGAME1 0x004f6b20
+// FUNCTION: POPCAPGAME1 0x004f9b70
 ImageFont::ImageFont(Image *theFontImage)
 {
 	mScale = 1.0;
@@ -1227,7 +1304,22 @@ ImageFont::ImageFont(Image *theFontImage)
 	aFontLayer->mAscent = aFontLayer->mImage->GetHeight();	
 }
 
-// FUNCTION: POPCAPGAME1 0x004f9b70
+// TEMPLATE: POPCAPGAME1 0x004536e0
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >
+
+// TEMPLATE: POPCAPGAME1 0x004dcbc0
+// std::list<Sexy::ActiveFontLayer,std::allocator<Sexy::ActiveFontLayer> >::_Buynode(struct std::_List_nod<class Sexy::ActiveFontLayer, class std::allocator<class Sexy::ActiveFontLayer>>::_Node *, struct std::_List_nod<class Sexy::ActiveFontLayer, class std::allocator<class Sexy::ActiveFontLayer>>::_Node *, class Sexy::ActiveFontLayer const &)
+
+// TEMPLATE: POPCAPGAME1 0x004de7f0
+// std::list<Sexy::ActiveFontLayer,std::allocator<Sexy::ActiveFontLayer> >::_Incsize
+
+// TEMPLATE: POPCAPGAME1 0x004dcce0
+// std::list<Sexy::ActiveFontLayer,std::allocator<Sexy::ActiveFontLayer> >::erase
+
+// TEMPLATE: POPCAPGAME1 0x004e4b30
+// std::list<Sexy::ActiveFontLayer,std::allocator<Sexy::ActiveFontLayer> >::_Insert<std::list<Sexy::ActiveFontLayer,std::allocator<Sexy::ActiveFontLayer> >::_Const_iterator<1> >
+
+// FUNCTION: POPCAPGAME1 0x004f6b20
 ImageFont::ImageFont(const ImageFont& theImageFont) :
 	Font(theImageFont),
 	mScale(theImageFont.mScale),
@@ -1256,6 +1348,13 @@ ImageFont::ImageFont(Image* theFontImage, const std::string& theFontDescFileName
 	mActiveListValid = true;
 }
 
+// SYNTHETIC: POPCAPGAME1 0x004f6680
+// Sexy::ImageFont::`scalar deleting destructor'
+
+// TEMPLATE: POPCAPGAME1 0x004dd110
+// std::list<Sexy::ActiveFontLayer,std::allocator<Sexy::ActiveFontLayer> >::clear
+
+// FUNCTION: POPCAPGAME1 0x004ea950
 ImageFont::~ImageFont()
 {
 	mFontData->DeRef();
@@ -1500,7 +1599,7 @@ int ImageFont::CharWidthKern(char theChar, char thePrevChar)
 	return aMaxXPos;
 }
 
-
+// FUNCTION: POPCAPGAME1 0x004cd2d0
 int ImageFont::CharWidth(char theChar)
 {
 	return CharWidthKern(theChar,0);
@@ -1512,6 +1611,13 @@ static RenderCommand gRenderCommandPool[POOL_SIZE];
 static RenderCommand* gRenderTail[256];
 static RenderCommand* gRenderHead[256];
 
+// TEMPLATE: POPCAPGAME1 0x004dc820
+// std::list<Sexy::TRect<int>,std::allocator<Sexy::TRect<int> > >::_Buynode
+
+// TEMPLATE: POPCAPGAME1 0x004de890
+// std::list<Sexy::TRect<int>,std::allocator<Sexy::TRect<int> > >::_Incsize
+
+// FUNCTION: POPCAPGAME1 0x004e8a10
 void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect* theClipRect, RectList* theDrawnAreas, int* theWidth)
 {
 	AutoCrit anAutoCrit(gRenderCritSec);
@@ -1743,38 +1849,45 @@ void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& 
 	g->SetColorizeImages(colorizeImages);
 }
 
+// FUNCTION: POPCAPGAME1 0x004cd2f0
 void ImageFont::DrawString(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect& theClipRect)
 {
 	DrawStringEx(g, theX, theY, theString, theColor, &theClipRect, NULL, NULL);	
 }
 
+// FUNCTION: POPCAPGAME1 0x004f6c10
 Font* ImageFont::Duplicate()
 {
 	return new ImageFont(*this);
 }
 
+// FUNCTION: POPCAPGAME1 0x004cd320
 void ImageFont::SetPointSize(int thePointSize)
 {
 	mPointSize = thePointSize;
 	mActiveListValid = false;
 }
 
+// FUNCTION: POPCAPGAME1 0x004cd340
 void ImageFont::SetScale(double theScale)
 {
 	mScale = theScale;
 	mActiveListValid = false;
 }
 
+// FUNCTION: POPCAPGAME1 0x004cd360
 int	ImageFont::GetPointSize()
 {
 	return mPointSize;
 }
 
+// FUNCTION: POPCAPGAME1 0x004cd370
 int	ImageFont::GetDefaultPointSize()
 {
 	return mFontData->mDefaultPointSize;
 }
 
+// FUNCTION: POPCAPGAME1 0x004f6d20
 bool ImageFont::AddTag(const std::string& theTagName)
 {
 	if (HasTag(theTagName))
@@ -1786,6 +1899,13 @@ bool ImageFont::AddTag(const std::string& theTagName)
 	return true;
 }
 
+// TEMPLATE: POPCAPGAME1 0x004dcc60
+// std::_Find<std::basic_string<char,std::char_traits<char>,std::allocator<char> > *,std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
+
+// TEMPLATE: POPCAPGAME1 0x004e9150
+// std::vector<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::allocator<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::erase(class std::_Vector_iterator<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>>, class std::allocator<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>>>>)
+
+// FUNCTION: POPCAPGAME1 0x004eaa00
 bool ImageFont::RemoveTag(const std::string& theTagName)
 {
 	std::string aTagName = StringToUpper(theTagName);
@@ -1799,12 +1919,14 @@ bool ImageFont::RemoveTag(const std::string& theTagName)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x004dd860
 bool ImageFont::HasTag(const std::string& theTagName)
 {
 	StringVector::iterator anItr = std::find(mTagVector.begin(), mTagVector.end(), theTagName);
 	return anItr != mTagVector.end();
 }
 
+// FUNCTION: POPCAPGAME1 0x004e3370
 std::string ImageFont::GetDefine(const std::string& theName)
 {
 	DataElement* aDataElement = mFontData->Dereference(theName);
@@ -1815,6 +1937,7 @@ std::string ImageFont::GetDefine(const std::string& theName)
 	return mFontData->DataElementToString(aDataElement);
 }
 
+// FUNCTION: POPCAPGAME1 0x004cd380
 void ImageFont::Prepare()
 {
 	if (!mActiveListValid)

@@ -300,6 +300,7 @@ std::wstring Sexy::Trim(const std::wstring& theString)
 	return theString.substr(aStartPos, anEndPos - aStartPos + 1);
 }
 
+// FUNCTION: POPCAPGAME1 0x00500c20
 bool Sexy::StringToInt(const std::string theString, int* theIntVal)
 {
 	*theIntVal = 0;
@@ -404,6 +405,7 @@ bool Sexy::StringToInt(const std::wstring theString, int* theIntVal)
 	return true;
 }
 
+// FUNCTION: POPCAPGAME1 0x00500ed0
 bool Sexy::StringToDouble(const std::string theString, double* theDoubleVal)
 {
 	*theDoubleVal = 0.0;
