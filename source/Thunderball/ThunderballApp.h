@@ -57,7 +57,6 @@ extern BlendedImage* gBallPegImage[9];
 // VTABLE: POPCAPGAME1 0x005d7cb8
 class ThunderballApp : public SexyApp {
 public:
-	char mPadding0x728[0x28];           // +0x728
 	int mUnk0x750;                     // +0x750 // part of SexyApp?
 	char mPadding0x754[0xc];            // +0x754
 	GameMode mGameMode;                // +0x760

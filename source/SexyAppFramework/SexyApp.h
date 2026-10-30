@@ -13,33 +13,7 @@ class BetaSupport;
 class SexyApp : public SexyAppBase
 {
 public: 
-        InternetManager*                mInternetManager;
-        BetaSupport*                    mBetaSupport;
-
-        std::string                             mReferId;
-        std::string                             mVariation;
-        ulong                                   mDownloadId;
-        std::string                             mRegSource;
-        ulong                                   mLastVerCheckQueryTime;
-        bool                                    mSkipAd;
-        bool                                    mDontUpdate;    
-
-        int                                             mBuildNum;
-        std::string                             mBuildDate;
-
-        std::string                             mUserName;      
-        std::string                             mRegUserName;
-        std::string                             mRegCode;
-        bool                                    mIsRegistered;  
-        bool                                    mBuildUnlocked;
-
-        int                                             mTimesPlayed;
-        int                                             mTimesExecuted;
-        bool                                    mTimedOut;
-
-#ifdef ZYLOM
-        uint                                    mZylomGameId;
-#endif
+        char padding[0x118];        
 
 public:
         virtual void                    UpdateFrames();
@@ -75,10 +49,6 @@ public:
         virtual std::string             GetGameSEHInfo();
         virtual void                    GetSEHWebParams(DefinesMap* theDefinesMap);
 
-#ifdef ZYLOM
-        bool                                    ZylomUpdateCheckNeeded();       
-        void                                    ZylomShowAd();
-#endif          
 };
 
 // GLOBAL: POPCAPGAME1 0x00687394

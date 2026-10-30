@@ -83,7 +83,7 @@ jobs:
     - name: Summarize Accuracy
       shell: bash
       run: |
-        reccmp-reccmp -S progress.svg --svg-icon assets/popcapgame1.png --target POPCAPGAME1 --json progress.json --html progress.html --total 6576
+        reccmp-reccmp -S progress.svg --svg-icon assets/popcapgame1.png --target POPCAPGAME1 --json progress.json --html progress.html --total 6558
 
     - name: Test Exports
       shell: bash
@@ -115,41 +115,11 @@ jobs:
     steps:
     - uses: actions/checkout@main
 
-    - name: Download Win32 artifact
-      uses: actions/download-artifact@main
-      with:
-        name: Win32
-        path: build
-
     - name: Download Accuracy Report
       uses: actions/download-artifact@main
       with:
         name: Accuracy Report
         path: .
-
-    - name: Remove existing 'continuous' release if it exists
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        git push origin :refs/tags/continuous
-
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: continuous
-        name: "Continuous build"
-        files: |
-          build/popcapgame1.exe
-          progress.json
-          progress.svg
-          progress.html
-        body: |
-          GitHub Action logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        overwrite_files: true
-        make_latest: true
-      env:
-
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Organize files for GitHub Pages
       run: |

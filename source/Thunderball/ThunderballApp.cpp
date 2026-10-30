@@ -1396,8 +1396,8 @@ void ThunderballApp::ResetTwoPlayerStats()
 // FUNCTION: POPCAPGAME1 0x004234c0
 void ThunderballApp::ScrollOn(Widget* theWidget)
 {
-	if (mWidgetMover != NULL) {
-		mWidgetMover->ScrollOn(theWidget, mRegCode.size());
+	if (mUnk0x750 != 0) {
+		mWidgetMover->ScrollOn(theWidget, mUnk0x750);
 		ClearUpdateBacklog(false);
 	}
 }
