@@ -5907,7 +5907,7 @@ bool SexyAppBase::LoadProperties(const std::string& theFileName, bool required, 
 			// STRING: POPCAPGAME1 0x00612ac0
 			// "Unable to open properties file "
 
-			// STRING: POPCAPGAME1 0x00x612aa8
+			// STRING: POPCAPGAME1 0x00612aa8
 			// UNABLE_OPEN_PROPERTIES
 
 			Popup(GetString("UNABLE_OPEN_PROPERTIES", _S("Unable to open properties file ")) + StringToSexyString(theFileName));

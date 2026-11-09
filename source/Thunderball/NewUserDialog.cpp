@@ -184,7 +184,7 @@ int NewUserDialog::GetPreferredHeight(int theWidth)
 	}
 	else {
 		return ThunderDialog::GetPreferredHeight(theWidth) +
-		// STRING: POPCAPGAME1 0x00x5fb0e8
+		// STRING: POPCAPGAME1 0x005fb0e8
 		ModVal(0, "SEXY_SEXYMODVALc:\\gamesrc\\cpp\\thunderball\\NewUserDialog.cpp660,72", 0x28);
 	}
 }
